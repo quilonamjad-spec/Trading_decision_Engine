@@ -1,8 +1,8 @@
-# ---------------------------------------------
-# Trade Decision Engine
-# Version : 0.4
-# utils/watchlist.py
-# ---------------------------------------------
+"""
+Trade Decision Engine
+
+Watchlist Loader
+"""
 
 import json
 
