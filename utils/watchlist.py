@@ -1,0 +1,19 @@
+# ---------------------------------------------
+# Trade Decision Engine
+# Version : 0.4
+# utils/watchlist.py
+# ---------------------------------------------
+
+import json
+
+
+WATCHLIST_FILE = "watchlist.json"
+
+
+def load_watchlist():
+
+    with open(WATCHLIST_FILE, "r") as file:
+
+        data = json.load(file)
+
+    return data["watchlist"]
