@@ -66,6 +66,9 @@ class MarketDataEngine:
                     auto_adjust=True
 
                 )
+                # Flatten MultiIndex columns if present
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
 
                 if df.empty:
 
