@@ -1,50 +1,24 @@
 import streamlit as st
+
 from ui.styles import load_css
+from ui.components.stock_card import StockCard
+
+st.set_page_config(
+    page_title="TDE Prototype",
+    layout="centered",
+)
 
 load_css()
 
-st.markdown("""
+card = StockCard()
 
-<div class="stock-card">
-
-<div class="stock-title">
-
-SBIN
-
-</div>
-
-<div class="stock-subtitle">
-
-State Bank of India
-
-</div>
-
-<div class="stock-price">
-
-₹1022.60
-
-</div>
-
-<div class="stock-change-red">
-
-▼ -4.60 (-0.45%)
-
-</div>
-
-<hr>
-
-<div class="section-title">
-
-TREND
-
-</div>
-
-<div class="section-text">
-
-Bearish
-
-</div>
-
-</div>
-
-""",unsafe_allow_html=True)
+card.render(
+    ticker="SBIN",
+    company="State Bank of India",
+    price=1022.60,
+    change=-4.60,
+    change_percent=-0.45,
+    trend="Bearish",
+    momentum="Weakening",
+    risk="Recovering",
+)
