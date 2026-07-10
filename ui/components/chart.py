@@ -3,7 +3,7 @@
 Trade Decision Engine (TDE)
 
 Mini Candlestick Chart
-Version : P2.1
+Version : P2.2
 =========================================================
 """
 
@@ -14,18 +14,29 @@ class MiniChart:
 
     def render(self, df):
 
-        """
-        Returns a compact Plotly candlestick chart.
-        """
+        # ----------------------------------------
+        # Copy only last 20 candles
+        # ----------------------------------------
 
-        # Last 20 candles only
         data = df.tail(20).copy()
 
-        # ----------------------------
-        # Candlestick
-        # ----------------------------
+        # ----------------------------------------
+        # Calculate EMA20 (Display Only)
+        # ----------------------------------------
+
+        data["EMA20"] = (
+            data["Close"]
+            .ewm(span=20, adjust=False)
+            .mean()
+        )
+
+        # ----------------------------------------
+        # Create Figure
+        # ----------------------------------------
 
         fig = go.Figure()
+
+        # Candlestick
 
         fig.add_trace(
 
@@ -49,80 +60,66 @@ class MiniChart:
 
                 decreasing_fillcolor="#EF4444",
 
-                name="Price",
+                showlegend=False,
 
             )
 
         )
 
-        # ----------------------------
-        # EMA20 Overlay
-        # ----------------------------
+        # EMA20
 
-        if "EMA20" in data.columns:
+        fig.add_trace(
 
-            fig.add_trace(
+            go.Scatter(
 
-                go.Scatter(
+                x=data.index,
 
-                    x=data.index,
+                y=data["EMA20"],
 
-                    y=data["EMA20"],
+                mode="lines",
 
-                    mode="lines",
+                line=dict(
+                    color="#3B82F6",
+                    width=2,
+                ),
 
-                    line=dict(
-
-                        color="#3B82F6",
-
-                        width=2,
-
-                    ),
-
-                    name="EMA20",
-
-                )
+                showlegend=False,
 
             )
 
-        # ----------------------------
+        )
+
+        # ----------------------------------------
         # Layout
-        # ----------------------------
+        # ----------------------------------------
 
         fig.update_layout(
 
             height=170,
 
             margin=dict(
-
                 l=0,
-
                 r=0,
-
                 t=0,
-
                 b=0,
-
             ),
 
             paper_bgcolor="#0E1117",
 
             plot_bgcolor="#0E1117",
 
-            showlegend=False,
-
             xaxis=dict(
 
                 visible=False,
 
-                rangeslider=dict(visible=False),
+                rangeslider=dict(
+                    visible=False
+                )
 
             ),
 
             yaxis=dict(
-
-                visible=False,
-
+                visible=False
             ),
 
         )
