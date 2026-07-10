@@ -1,4 +1,3 @@
-
 import streamlit as st
 
 from ui.styles import load_css
@@ -13,15 +12,22 @@ st.set_page_config(
 
 load_css()
 
-# -----------------------------------
+# ------------------------------------
+# Download Market Data
+# ------------------------------------
 
 market = MarketDataEngine()
 
-data = market.download_data(["SBIN.NS"])
+market_data = market.download_watchlist()
 
-df = data["SBIN.NS"]
+# Take the first stock from the watchlist
+ticker = list(market_data.keys())[0]
 
-# -----------------------------------
+df = market_data[ticker]
+
+# ------------------------------------
+# Latest Price
+# ------------------------------------
 
 price = float(df["Close"].iloc[-1])
 
@@ -31,28 +37,20 @@ change = price - previous
 
 change_percent = (change / previous) * 100
 
-# -----------------------------------
+# ------------------------------------
+# Render Card
+# ------------------------------------
 
 card = StockCard()
 
 card.render(
-
-    ticker="SBIN",
-
-    company="State Bank of India",
-
+    ticker=ticker.replace(".NS", ""),
+    company=ticker,
     price=price,
-
     change=change,
-
     change_percent=change_percent,
-
     trend="Bearish",
-
     momentum="Weakening",
-
     risk="Recovering",
-
     df=df,
-
 )
