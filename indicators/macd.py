@@ -2,10 +2,7 @@
 ====================================================
 Trade Decision Engine (TDE)
 
-Version : 0.6
-Module  : MACD Engine
-
-Author  : Amjad + ChatGPT
+MACD Engine V2
 ====================================================
 """
 
@@ -14,66 +11,70 @@ import pandas as pd
 
 
 def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
-    """
-    Calculate MACD and analyze momentum.
-
-    Parameters
-    ----------
-    df : DataFrame
-        OHLCV DataFrame
-
-    candle : int
-        Candle index (-1 = latest)
-
-    Returns
-    -------
-    dict
-    """
 
     close = df["Close"]
 
+    # ----------------------------
     # MACD Calculation
+    # ----------------------------
+
     ema12 = close.ewm(span=12, adjust=False).mean()
     ema26 = close.ewm(span=26, adjust=False).mean()
 
     macd_line = ema12 - ema26
     signal_line = macd_line.ewm(span=9, adjust=False).mean()
+
     histogram = macd_line - signal_line
 
     macd = float(macd_line.iloc[candle])
     signal = float(signal_line.iloc[candle])
     hist = float(histogram.iloc[candle])
 
-    # Previous histogram for momentum comparison
     prev_hist = float(histogram.iloc[candle - 1])
 
-    # -----------------------------
-    # Analysis
-    # -----------------------------
+    # ----------------------------
+    # Momentum Bias
+    # ----------------------------
 
     if macd > signal:
-        trend = "Bullish"
-        cross = "Above Signal"
+        momentum_bias = "Bullish"
     elif macd < signal:
-        trend = "Bearish"
-        cross = "Below Signal"
+        momentum_bias = "Bearish"
     else:
-        trend = "Neutral"
-        cross = "Equal"
+        momentum_bias = "Neutral"
 
-    if hist > prev_hist:
-        histogram_direction = "Increasing"
-    elif hist < prev_hist:
-        histogram_direction = "Decreasing"
-    else:
-        histogram_direction = "Flat"
+    # ----------------------------
+    # Histogram Interpretation
+    # ----------------------------
 
-    if abs(hist) > 0.50:
-        momentum = "Strong"
-    elif abs(hist) > 0.20:
-        momentum = "Moderate"
+    if hist >= 0:
+
+        if hist > prev_hist:
+            histogram_state = "Bullish Momentum Increasing"
+        else:
+            histogram_state = "Bullish Momentum Weakening"
+
     else:
-        momentum = "Weak"
+
+        if hist > prev_hist:
+            histogram_state = "Bearish Momentum Weakening"
+        else:
+            histogram_state = "Bearish Momentum Increasing"
+
+    # ----------------------------
+    # Momentum Strength
+    # ----------------------------
+
+    abs_hist = abs(hist)
+
+    if abs_hist > 0.50:
+        strength = "Strong"
+
+    elif abs_hist > 0.20:
+        strength = "Moderate"
+
+    else:
+        strength = "Weak"
 
     return {
 
@@ -83,18 +84,21 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
         "values": {
 
-            "macd": round(macd, 2),
-            "signal": round(signal, 2),
-            "histogram": round(hist, 2)
+            "macd": round(macd,2),
+
+            "signal": round(signal,2),
+
+            "histogram": round(hist,2)
 
         },
 
         "analysis": {
 
-            "trend": trend,
-            "cross": cross,
-            "histogram_direction": histogram_direction,
-            "momentum": momentum
+            "momentum_bias": momentum_bias,
+
+            "histogram_state": histogram_state,
+
+            "strength": strength
 
         }
 
