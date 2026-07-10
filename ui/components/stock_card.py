@@ -73,7 +73,7 @@ class StockCard:
             # ==========================
             # Chart Placeholder
             # ==========================
-
+            
             chart = MiniChart()
 
             fig = chart.render(df)
