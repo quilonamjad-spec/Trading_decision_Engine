@@ -8,7 +8,7 @@ Version : P2.0
 """
 
 import streamlit as st
-
+from ui.components.chart import MiniChart
 
 class StockCard:
 
@@ -22,6 +22,7 @@ class StockCard:
         trend,
         momentum,
         risk,
+        df,
     ):
 
         # --------------------------
@@ -73,7 +74,17 @@ class StockCard:
             # Chart Placeholder
             # ==========================
 
-            st.info("📈 Mini Candlestick Chart (Coming Next)")
+            chart = MiniChart()
+
+            fig = chart.render(df)
+
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config={
+                    "displayModeBar": False
+                },
+            )
 
             st.divider()
 
