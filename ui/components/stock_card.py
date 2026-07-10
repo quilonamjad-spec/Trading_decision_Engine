@@ -2,8 +2,8 @@
 =========================================================
 Trade Decision Engine (TDE)
 
-Reusable Stock Card
-Version : P1.2
+Stock Card
+Version : P2.0
 =========================================================
 """
 
@@ -24,131 +24,80 @@ class StockCard:
         risk,
     ):
 
-        change_class = (
-            "stock-change-green"
-            if change >= 0
-            else "stock-change-red"
-        )
+        # --------------------------
+        # Card Container
+        # --------------------------
 
-        change_arrow = "▲" if change >= 0 else "▼"
+        with st.container(border=True):
 
-        st.markdown(
-            f"""
-<div class="stock-card">
+            # ==========================
+            # Header
+            # ==========================
 
-    <div style="display:flex;
-                justify-content:space-between;
-                align-items:center;">
+            left, right = st.columns([4, 1])
 
-        <div>
+            with left:
+                st.subheader(ticker)
+                st.caption(company)
 
-            <div class="stock-title">
+            with right:
+                st.markdown(
+                    """
+                    <div style="
+                        background:#FEF3C7;
+                        color:#92400E;
+                        text-align:center;
+                        padding:6px;
+                        border-radius:12px;
+                        font-weight:bold;">
+                        WATCH
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
 
-                {ticker}
+            # ==========================
+            # Price
+            # ==========================
 
-            </div>
+            st.markdown(f"## ₹ {price:.2f}")
 
-            <div class="stock-subtitle">
+            if change >= 0:
+                st.success(f"▲ {change:.2f} ({change_percent:.2f}%)")
+            else:
+                st.error(f"▼ {abs(change):.2f} ({change_percent:.2f}%)")
 
-                {company}
+            st.divider()
 
-            </div>
+            # ==========================
+            # Chart Placeholder
+            # ==========================
 
-        </div>
+            st.info("📈 Mini Candlestick Chart (Coming Next)")
 
-        <div style="
-            background:#F3F4F6;
-            padding:8px 14px;
-            border-radius:20px;
-            font-weight:600;
-            font-size:13px;">
+            st.divider()
 
-            WATCH
+            # ==========================
+            # Analysis
+            # ==========================
 
-        </div>
+            col1, col2, col3 = st.columns(3)
 
-    </div>
+            with col1:
+                st.markdown("### 📈")
+                st.caption("TREND")
+                st.write(trend)
 
+            with col2:
+                st.markdown("### 🚀")
+                st.caption("MOMENTUM")
+                st.write(momentum)
 
-    <div class="stock-price">
+            with col3:
+                st.markdown("### ⚖")
+                st.caption("RISK")
+                st.write(risk)
 
-        ₹ {price:.2f}
+            st.divider()
 
-    </div>
-
-    <div class="{change_class}">
-
-        {change_arrow}
-        {abs(change):.2f}
-        ({change_percent:.2f}%)
-
-    </div>
-
-
-    <hr>
-
-
-    <div style="
-        height:130px;
-        border:1px dashed #D1D5DB;
-        border-radius:12px;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        color:#9CA3AF;
-        margin-bottom:20px;">
-
-        Mini Candlestick Chart
-
-    </div>
-
-
-    <div class="section-title">
-
-        📈 TREND
-
-    </div>
-
-    <div class="section-text">
-
-        {trend}
-
-    </div>
-
-
-    <hr>
-
-
-    <div class="section-title">
-
-        🚀 MOMENTUM
-
-    </div>
-
-    <div class="section-text">
-
-        {momentum}
-
-    </div>
-
-
-    <hr>
-
-
-    <div class="section-title">
-
-        ⚖ RISK
-
-    </div>
-
-    <div class="section-text">
-
-        {risk}
-
-    </div>
-
-</div>
-
-""",
-            unsafe_allow_html=True,
-        )
+            st.caption("Click card for detailed analysis (Coming Soon)")
