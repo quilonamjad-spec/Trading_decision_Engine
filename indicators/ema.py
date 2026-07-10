@@ -2,36 +2,23 @@
 ====================================================
 Trade Decision Engine (TDE)
 
-Version : 0.6
-Module  : EMA Engine
-
-Author  : Amjad + ChatGPT
+EMA Engine V2
 ====================================================
 """
 
 from typing import Dict
-
 import pandas as pd
-
 import config
 
 
+def percentage_distance(price: float, reference: float) -> float:
+    """
+    Percentage distance between current price and reference.
+    """
+    return round(((price - reference) / reference) * 100, 2)
+
+
 def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
-    """
-    Calculate EMA values and determine alignment.
-
-    Parameters
-    ----------
-    df : DataFrame
-        OHLCV DataFrame
-
-    candle : int
-        Candle index (-1 = latest)
-
-    Returns
-    -------
-    dict
-    """
 
     close = df["Close"]
 
@@ -40,37 +27,74 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
     ema20 = close.ewm(span=config.EMA_SLOW, adjust=False).mean()
     ema50 = close.ewm(span=config.EMA_TREND, adjust=False).mean()
 
+    price = float(close.iloc[candle])
+
     e5 = float(ema5.iloc[candle])
     e9 = float(ema9.iloc[candle])
     e20 = float(ema20.iloc[candle])
     e50 = float(ema50.iloc[candle])
 
-    # ---------------------------------
-    # Alignment
-    # ---------------------------------
+    # ----------------------------------
+    # Trend Alignment
+    # ----------------------------------
 
     if e5 > e9 > e20 > e50:
-
         alignment = "Bullish"
 
     elif e5 < e9 < e20 < e50:
-
         alignment = "Bearish"
 
     else:
-
         alignment = "Mixed"
+
+    # ----------------------------------
+    # Price Position
+    # ----------------------------------
+
+    price_vs_ema20 = "Above EMA20" if price > e20 else "Below EMA20"
+    price_vs_ema50 = "Above EMA50" if price > e50 else "Below EMA50"
+
+    # ----------------------------------
+    # Distances
+    # ----------------------------------
+
+    distance20 = percentage_distance(price, e20)
+    distance50 = percentage_distance(price, e50)
 
     return {
 
-        "ema5": round(e5,2),
+        "name": "EMA",
 
-        "ema9": round(e9,2),
+        "pillar": "Trend",
 
-        "ema20": round(e20,2),
+        "values": {
 
-        "ema50": round(e50,2),
+            "price": round(price,2),
 
-        "alignment": alignment
+            "ema5": round(e5,2),
+
+            "ema9": round(e9,2),
+
+            "ema20": round(e20,2),
+
+            "ema50": round(e50,2)
+
+        },
+
+        "analysis": {
+
+            "alignment": alignment,
+
+            "price_vs_ema20": price_vs_ema20,
+
+            "price_vs_ema50": price_vs_ema50,
+
+            "distance_ema20_pct": distance20,
+
+            "distance_ema50_pct": distance50
+
+        }
 
     }
+
+
