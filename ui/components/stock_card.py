@@ -60,15 +60,39 @@ class StockCard:
             # ==========================
             # Price
             # ==========================
+            st.markdown(
+                f"""
+                <div style="
+                    font-size:32px;
+                    font-weight:700;
+                    color:white;
+                    margin-bottom:4px;
+                ">
+                    ₹ {price:,.2f}
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
-            st.markdown(f"## ₹ {price:.2f}")
+            # Price Change
 
-            if change >= 0:
-                st.success(f"▲ {change:.2f} ({change_percent:.2f}%)")
-            else:
-                st.error(f"▼ {abs(change):.2f} ({change_percent:.2f}%)")
+            color = "#22C55E" if change >= 0 else "#EF4444"
+            arrow = "▲" if change >= 0 else "▼"
 
-            st.divider()
+            st.markdown(
+                f"""
+                <div style="
+                color:{color};
+                font-size:15px;
+                font-weight:600;
+                margin-bottom:8px;
+                ">
+                    {arrow} {abs(change):.2f} ({change_percent:.2f}%)
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+          
 
             # ==========================
             # Chart Placeholder
