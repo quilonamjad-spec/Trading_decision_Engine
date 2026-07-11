@@ -1,19 +1,20 @@
+from data.market_data import MarketDataEngine
 from indicators import ema
-from data.market_data import MarketData
 
-# -----------------------------------
-# Download Data
-# -----------------------------------
+# ----------------------------------
+# Download Market Data
+# ----------------------------------
 
-market = MarketData()
+market = MarketDataEngine()
 
-data = market.download_data(["SBIN.NS"])
+market_data = market.download_watchlist()
 
-df = data["SBIN.NS"]
+# Get SBIN DataFrame
+df = market_data["SBIN.NS"]
 
-# -----------------------------------
+# ----------------------------------
 # Run EMA Engine
-# -----------------------------------
+# ----------------------------------
 
 result = ema.calculate(df)
 
