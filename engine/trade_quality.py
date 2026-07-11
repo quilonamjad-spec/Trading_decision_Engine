@@ -3,7 +3,7 @@
 Trade Decision Engine (TDE)
 
 Trade Quality Engine
-Version : 2.0
+Version : 2.1
 =========================================================
 """
 
@@ -33,9 +33,7 @@ class TradeQualityEngine:
         # -----------------------------------------
 
         trend = ema_result["decision"]
-
         momentum = macd_result["decision"]
-
         risk = rsi_result["decision"]
 
         # -----------------------------------------
@@ -43,13 +41,9 @@ class TradeQualityEngine:
         # -----------------------------------------
 
         total_score = (
-
             trend["score"]
-
             + momentum["score"]
-
             + risk["score"]
-
         )
 
         # -----------------------------------------
@@ -57,13 +51,9 @@ class TradeQualityEngine:
         # -----------------------------------------
 
         directions = [
-
             trend["direction"],
-
             momentum["direction"],
-
             risk["direction"]
-
         ]
 
         direction = self.get_majority_direction(directions)
@@ -73,17 +63,11 @@ class TradeQualityEngine:
         # -----------------------------------------
 
         confidence = self.get_majority_confidence(
-
             [
-
                 trend["confidence"],
-
                 momentum["confidence"],
-
                 risk["confidence"]
-
             ]
-
         )
 
         # -----------------------------------------
@@ -95,6 +79,8 @@ class TradeQualityEngine:
             "score": total_score,
 
             "grade": self.get_grade(total_score),
+
+            "stars": self.get_stars(total_score),
 
             "status": self.get_status(total_score),
 
@@ -205,3 +191,25 @@ class TradeQualityEngine:
             return "C"
 
         return "D"
+
+    # -------------------------------------------------
+
+    def get_stars(self, score):
+
+        if score >= 90:
+
+            return "★★★★★"
+
+        elif score >= 80:
+
+            return "★★★★☆"
+
+        elif score >= 70:
+
+            return "★★★☆☆"
+
+        elif score >= 60:
+
+            return "★★☆☆☆"
+
+        return "★☆☆☆☆"
