@@ -120,10 +120,19 @@ class StockCard:
             
             st.divider()
             
-            st.subheader("📊 Price Action")
+            st.subheader("📈 Price Action")
             
-            self.chart.render(df)
+            fig = self.chart.render(df)
             
+            st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config={
+                    "displayModeBar": False
+                }
+            )
+            
+            st.divider()
             # ==========================================
             # Decision Summary
             # ==========================================
