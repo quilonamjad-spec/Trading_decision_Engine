@@ -79,52 +79,39 @@ class StockCard:
             self.badge.render(
                 trade["status"]
             )
-            
             # ==========================================
             # Trade Score
             # ==========================================
 
+            col1, col2 = st.columns(2)
+            
+            with col1:
+            
+                st.metric(
+            
+                    label="Trade Quality",
+            
+                    value=f"{trade['score']}/100"
+            
+                )
+            
+            with col2:
+            
+                st.metric(
+            
+                    label="Grade",
+            
+                    value=trade["grade"]
+            
+                )
+            
             st.markdown(
-                f"""
-                <div style="text-align:center;">
-
-                    <div style="
-                        color:#9E9E9E;
-                        font-size:13px;
-                        letter-spacing:1px;">
-
-                        TRADE QUALITY
-
-                    </div>
-
-                    <div style="
-                        font-size:44px;
-                        font-weight:bold;">
-
-                        {trade["score"]}/100
-
-                    </div>
-
-                    <div style="
-                        color:#FFD54F;
-                        font-size:28px;
-                        font-weight:bold;">
-
-                        {trade["grade"]}
-
-                    </div>
-
-                    <div style="
-                        color:#FFD54F;
-                        font-size:22px;">
-
-                        {trade["stars"]}
-
-                    </div>
-
-                </div>
-                """,
+            
+                f"<h3 style='text-align:center;color:#FFD54F'>{trade['stars']}</h3>",
+            
                 unsafe_allow_html=True
+            
             )
-
-st.divider()            
+            
+            st.divider()
+           
