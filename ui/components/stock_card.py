@@ -9,6 +9,7 @@ Version : P2.0
 
 import streamlit as st
 from ui.components.chart import MiniChart
+from ui.components.badge import Badge
 
 class StockCard:
 
@@ -121,17 +122,40 @@ class StockCard:
             with col1:
                 st.markdown("### 📈")
                 st.caption("TREND")
-                st.write(trend)
+                badge = Badge()
+
+                if trend == "Bullish":
+                    badge.render("🟢 Bullish", "green")
+
+                elif trend == "Bearish":
+                    badge.render("🔴 Bearish", "red")
+
+                else:
+                    badge.render("🟡 Mixed", "yellow")
 
             with col2:
                 st.markdown("### 🚀")
                 st.caption("MOMENTUM")
-                st.write(momentum)
+                if momentum == "Strong":
+                    badge.render("🟢 Strong", "green")
+
+                elif momentum == "Weakening":
+                    badge.render("🟡 Weakening", "yellow")
+
+                else:
+                    badge.render(momentum, "gray")
 
             with col3:
                 st.markdown("### ⚖")
                 st.caption("RISK")
-                st.write(risk)
+                if risk == "Recovering":
+                    badge.render("🟢 Recovering", "green")
+
+                elif risk == "High":
+                    badge.render("🔴 High", "red")
+
+                else:
+                    badge.render(risk, "gray")
 
             st.divider()
 
