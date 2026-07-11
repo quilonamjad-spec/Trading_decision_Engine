@@ -2,7 +2,7 @@
 ====================================================
 Trade Decision Engine (TDE)
 
-RSI Engine V1
+RSI Engine V2
 ====================================================
 """
 
@@ -65,6 +65,45 @@ def calculate(df: pd.DataFrame, period: int = 14, candle: int = -1) -> Dict:
         zone = "Extreme"
         risk = "Very High"
 
+    # -------------------------------------
+    # Decision
+    # -------------------------------------
+
+    # Score
+
+    if risk == "Low":
+
+        score = 30
+        confidence = "High"
+
+    elif risk == "Medium":
+
+        score = 20
+        confidence = "Medium"
+
+    else:
+
+        score = 10
+        confidence = "Low"
+
+    # Direction
+
+    if zone in ["Oversold", "Recovering"]:
+
+        direction = "LONG"
+
+    elif zone in ["Overheated", "Extreme"]:
+
+        direction = "SHORT"
+
+    else:
+
+        direction = "NEUTRAL"
+
+    # Explainability
+
+    reason = f"{zone} ({risk} Risk)"
+
     return {
 
         "name": "RSI",
@@ -82,6 +121,18 @@ def calculate(df: pd.DataFrame, period: int = 14, candle: int = -1) -> Dict:
             "zone": zone,
 
             "risk": risk
+
+        },
+
+        "decision": {
+
+            "score": score,
+
+            "direction": direction,
+
+            "confidence": confidence,
+
+            "reason": reason
 
         }
 
