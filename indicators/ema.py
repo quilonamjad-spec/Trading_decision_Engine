@@ -116,7 +116,7 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
             "distance_ema50_pct": distance50
 
-        }
+        },
         
         "decision": {
 
