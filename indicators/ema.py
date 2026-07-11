@@ -2,7 +2,7 @@
 ====================================================
 Trade Decision Engine (TDE)
 
-EMA Engine V2
+EMA Engine V3
 ====================================================
 """
 
@@ -39,12 +39,15 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
     # ----------------------------------
 
     if e5 > e9 > e20 > e50:
+
         alignment = "Bullish"
 
     elif e5 < e9 < e20 < e50:
+
         alignment = "Bearish"
 
     else:
+
         alignment = "Mixed"
 
     # ----------------------------------
@@ -53,7 +56,7 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
     price_vs_ema20 = "Above EMA20" if price > e20 else "Below EMA20"
     price_vs_ema50 = "Above EMA50" if price > e50 else "Below EMA50"
-    
+
     # ----------------------------------
     # Decision
     # ----------------------------------
@@ -76,13 +79,22 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
         direction = "NEUTRAL"
         confidence = "Medium"
 
-    
+    # ----------------------------------
+    # Explainability
+    # ----------------------------------
+
+    reason = f"{alignment} Alignment"
+
     # ----------------------------------
     # Distances
     # ----------------------------------
 
     distance20 = percentage_distance(price, e20)
     distance50 = percentage_distance(price, e50)
+
+    # ----------------------------------
+    # Return
+    # ----------------------------------
 
     return {
 
@@ -92,15 +104,15 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
         "values": {
 
-            "price": round(price,2),
+            "price": round(price, 2),
 
-            "ema5": round(e5,2),
+            "ema5": round(e5, 2),
 
-            "ema9": round(e9,2),
+            "ema9": round(e9, 2),
 
-            "ema20": round(e20,2),
+            "ema20": round(e20, 2),
 
-            "ema50": round(e50,2)
+            "ema50": round(e50, 2)
 
         },
 
@@ -117,16 +129,18 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
             "distance_ema50_pct": distance50
 
         },
-        
+
         "decision": {
 
             "score": score,
 
             "direction": direction,
 
-            "confidence": confidence
+            "confidence": confidence,
+
+            "reason": reason
 
         }
-    }
 
+    }
 
