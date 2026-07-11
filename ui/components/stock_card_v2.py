@@ -36,28 +36,13 @@ class StockCard:
             # Header
             # ==========================================
 
-            col1, col2 = st.columns([4,1])
+            col1, col2 = st.columns([5, 1])
 
             with col1:
 
-                st.markdown(
+                st.title(ticker)
 
-                    f"""
-                    <div style="font-size:28px;
-                                font-weight:700;
-                                color:white;">
-                        {ticker}
-                    </div>
-
-                    <div style="font-size:14px;
-                                color:#BDBDBD;">
-                        {company}
-                    </div>
-                    """,
-
-                    unsafe_allow_html=True
-
-                )
+                st.caption(company)
 
             with col2:
 
@@ -67,41 +52,25 @@ class StockCard:
                     use_container_width=True
                 )
 
-            st.markdown("")
+            st.write("")
 
             # ==========================================
             # Price
             # ==========================================
 
-            colour = "#2ECC71" if change >= 0 else "#E74C3C"
+            delta = f"{change:+.2f} ({pct_change:+.2f}%)"
 
-            arrow = "▲" if change >= 0 else "▼"
+            st.metric(
 
-            st.markdown(
+                label="Current Price",
 
-                f"""
-                <div style="font-size:40px;
-                            font-weight:700;
-                            color:white;">
+                value=f"₹ {price:,.2f}",
 
-                    ₹ {price:,.2f}
-
-                </div>
-
-                <div style="font-size:18px;
-                            color:{colour};">
-
-                    {arrow} {abs(change):.2f}
-                    ({pct_change:.2f}%)
-
-                </div>
-                """,
-
-                unsafe_allow_html=True
+                delta=delta
 
             )
 
-            st.markdown("")
+            st.write("")
 
             # ==========================================
             # Quality Badge
@@ -110,58 +79,52 @@ class StockCard:
             self.badge.render(
                 trade["status"]
             )
-
+            
             # ==========================================
             # Trade Score
             # ==========================================
 
             st.markdown(
-
                 f"""
-                <div style="text-align:center;
-                            margin-top:10px;">
+                <div style="text-align:center;">
 
                     <div style="
-                        font-size:32px;
-                        font-weight:700;
-                        color:#FFD54F;">
-
-                        {trade["grade"]}
-
-                    </div>
-
-                    <div style="
-                        font-size:48px;
-                        font-weight:800;
-                        color:white;">
-
-                        {trade["score"]}/100
-
-                    </div>
-
-                    <div style="
-                        font-size:22px;
-                        color:#FFD54F;">
-
-                        {trade["stars"]}
-
-                    </div>
-
-                    <div style="
-                        font-size:14px;
-                        color:#AAAAAA;
+                        color:#9E9E9E;
+                        font-size:13px;
                         letter-spacing:1px;">
 
                         TRADE QUALITY
 
                     </div>
 
+                    <div style="
+                        font-size:44px;
+                        font-weight:bold;">
+
+                        {trade["score"]}/100
+
+                    </div>
+
+                    <div style="
+                        color:#FFD54F;
+                        font-size:28px;
+                        font-weight:bold;">
+
+                        {trade["grade"]}
+
+                    </div>
+
+                    <div style="
+                        color:#FFD54F;
+                        font-size:22px;">
+
+                        {trade["stars"]}
+
+                    </div>
+
                 </div>
-
                 """,
-
                 unsafe_allow_html=True
-
             )
 
-            st.divider()
+st.divider()            
