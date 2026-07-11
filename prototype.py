@@ -93,23 +93,25 @@ for ticker, df in market_data.items():
     # -------------------------------
     # Render Card
     # -------------------------------
-
-    card.render(
-
-        ticker=ticker.replace(".NS", ""),
-
-        company=ticker,
-
-        price=price,
-
-        change=change,
-
-        pct_change=pct_change,
-
-        trade=trade,
-
-        df=df
-
-    )
-
-    st.markdown("<br>", unsafe_allow_html=True)
+    left, center, right = st.columns([1, 4, 1])
+    
+    with center:
+        card.render(
+    
+            ticker=ticker.replace(".NS", ""),
+    
+            company=ticker,
+    
+            price=price,
+    
+            change=change,
+    
+            pct_change=pct_change,
+    
+            trade=trade,
+    
+            df=df
+    
+        )
+    
+        st.markdown("<br>", unsafe_allow_html=True)
