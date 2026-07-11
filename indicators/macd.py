@@ -38,8 +38,10 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
     if macd > signal:
         momentum_bias = "Bullish"
+
     elif macd < signal:
         momentum_bias = "Bearish"
+
     else:
         momentum_bias = "Neutral"
 
@@ -51,6 +53,7 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
         if hist > prev_hist:
             histogram_state = "Bullish Momentum Increasing"
+
         else:
             histogram_state = "Bullish Momentum Weakening"
 
@@ -58,20 +61,38 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
         if hist > prev_hist:
             histogram_state = "Bearish Momentum Weakening"
+
         else:
             histogram_state = "Bearish Momentum Increasing"
-            
+
+    # ----------------------------
+    # Momentum Strength
+    # ----------------------------
+
+    abs_hist = abs(hist)
+
+    if abs_hist > 0.50:
+
+        strength = "Strong"
+
+    elif abs_hist > 0.20:
+
+        strength = "Moderate"
+
+    else:
+
+        strength = "Weak"
 
     # ----------------------------------
     # Decision
     # ----------------------------------
 
-    if trend == "Bullish":
+    if momentum_bias == "Bullish":
 
         score = 35
         direction = "LONG"
 
-    elif trend == "Bearish":
+    elif momentum_bias == "Bearish":
 
         score = 35
         direction = "SHORT"
@@ -83,11 +104,11 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
     # Confidence
 
-    if momentum == "Strong":
+    if strength == "Strong":
 
         confidence = "High"
 
-    elif momentum == "Moderate":
+    elif strength == "Moderate":
 
         confidence = "Medium"
 
@@ -95,25 +116,13 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
         confidence = "Low"
 
+    # Explainability
 
-    # Reason
+    reason = histogram_state
 
-    reason = f"{trend} Momentum"
-    
     # ----------------------------
-    # Momentum Strength
+    # Return
     # ----------------------------
-
-    abs_hist = abs(hist)
-
-    if abs_hist > 0.50:
-        strength = "Strong"
-
-    elif abs_hist > 0.20:
-        strength = "Moderate"
-
-    else:
-        strength = "Weak"
 
     return {
 
@@ -123,11 +132,11 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
 
         "values": {
 
-            "macd": round(macd,2),
+            "macd": round(macd, 2),
 
-            "signal": round(signal,2),
+            "signal": round(signal, 2),
 
-            "histogram": round(hist,2)
+            "histogram": round(hist, 2)
 
         },
 
@@ -140,15 +149,16 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
             "strength": strength
 
         },
+
         "decision": {
 
-        "score": score,
+            "score": score,
 
-        "direction": direction,
+            "direction": direction,
 
-        "confidence": confidence,
+            "confidence": confidence,
 
-        "reason": reason
+            "reason": reason
 
         }
 
