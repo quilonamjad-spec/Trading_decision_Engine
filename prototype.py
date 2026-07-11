@@ -13,7 +13,7 @@ from data.market_data import MarketDataEngine
 
 st.set_page_config(
     page_title="TDE Prototype",
-    layout="centered",
+    layout="wide",
 )
 
 load_css()
