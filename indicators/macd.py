@@ -60,7 +60,46 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
             histogram_state = "Bearish Momentum Weakening"
         else:
             histogram_state = "Bearish Momentum Increasing"
+            
 
+    # ----------------------------------
+    # Decision
+    # ----------------------------------
+
+    if trend == "Bullish":
+
+        score = 35
+        direction = "LONG"
+
+    elif trend == "Bearish":
+
+        score = 35
+        direction = "SHORT"
+
+    else:
+
+        score = 18
+        direction = "NEUTRAL"
+
+    # Confidence
+
+    if momentum == "Strong":
+
+        confidence = "High"
+
+    elif momentum == "Moderate":
+
+        confidence = "Medium"
+
+    else:
+
+        confidence = "Low"
+
+
+    # Reason
+
+    reason = f"{trend} Momentum"
+    
     # ----------------------------
     # Momentum Strength
     # ----------------------------
@@ -99,6 +138,17 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
             "histogram_state": histogram_state,
 
             "strength": strength
+
+        },
+        "decision": {
+
+        "score": score,
+
+        "direction": direction,
+
+        "confidence": confidence,
+
+        "reason": reason
 
         }
 
