@@ -1,36 +1,8 @@
 import streamlit as st
 
-# ==========================================
-# UI
-# ==========================================
-
-from ui.styles import load_css
-from ui.dashboard import CommandCenter
-
-# ==========================================
-# Data
-# ==========================================
-
-from data.market_data import MarketDataEngine
-
-# ==========================================
-# Indicator Experts
-# ==========================================
-
-from indicators import ema
-from indicators import macd
-from indicators import rsi
-
-# ==========================================
-# Engines
-# ==========================================
-
-from engine.trade_quality import TradeQualityEngine
-from engine.dashboard import DashboardEngine
-
-# ==========================================
+# ==========================================================
 # Page Configuration
-# ==========================================
+# ==========================================================
 
 st.set_page_config(
 
@@ -42,27 +14,71 @@ st.set_page_config(
 
 )
 
+# ==========================================================
+# UI
+# ==========================================================
+
+from ui.styles import load_css
+from ui.dashboard import CommandCenter
+
+# ==========================================================
+# Data
+# ==========================================================
+
+from data.market_data import MarketDataEngine
+
+# ==========================================================
+# Indicator Experts
+# ==========================================================
+
+from indicators import ema
+from indicators import macd
+from indicators import rsi
+
+# ==========================================================
+# Engines
+# ==========================================================
+
+from engine.trade_quality import TradeQualityEngine
+from engine.dashboard import DashboardEngine
+
+# ==========================================================
+# Load Styles
+# ==========================================================
+
 load_css()
 
-# ==========================================
+# ==========================================================
+# Title
+# ==========================================================
+
+st.title("Trade Decision Engine")
+
+st.caption("AI Powered Trading Decision Support System")
+
+st.divider()
+
+# ==========================================================
 # Download Market Data
-# ==========================================
+# ==========================================================
 
-market = MarketDataEngine()
+with st.spinner("Downloading market data..."):
 
-market_data = market.download_watchlist()
+    market = MarketDataEngine()
 
-# ==========================================
+    market_data = market.download_watchlist()
+
+# ==========================================================
 # Initialize Engines
-# ==========================================
+# ==========================================================
 
 trade_engine = TradeQualityEngine()
 
 dashboard_engine = DashboardEngine()
 
-# ==========================================
+# ==========================================================
 # Build Dashboard Intelligence
-# ==========================================
+# ==========================================================
 
 dashboard = dashboard_engine.build(
 
@@ -78,9 +94,9 @@ dashboard = dashboard_engine.build(
 
 )
 
-# ==========================================
+# ==========================================================
 # Render Command Center
-# ==========================================
+# ==========================================================
 
 command_center = CommandCenter()
 
