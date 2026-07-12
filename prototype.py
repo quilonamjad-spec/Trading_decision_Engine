@@ -1,117 +1,87 @@
 import streamlit as st
 
+# ==========================================
+# UI
+# ==========================================
+
 from ui.styles import load_css
-from ui.components.stock_card_v2 import StockCard
+from ui.dashboard import CommandCenter
+
+# ==========================================
+# Data
+# ==========================================
+
+from data.market_data import MarketDataEngine
+
+# ==========================================
+# Indicator Experts
+# ==========================================
 
 from indicators import ema
 from indicators import macd
 from indicators import rsi
 
-from engine.trade_quality import TradeQualityEngine
+# ==========================================
+# Engines
+# ==========================================
 
-from data.market_data import MarketDataEngine
+from engine.trade_quality import TradeQualityEngine
+from engine.dashboard import DashboardEngine
+
+# ==========================================
+# Page Configuration
+# ==========================================
 
 st.set_page_config(
-    page_title="TDE Prototype",
-    layout="wide",
+
+    page_title="Trade Decision Engine",
+
+    page_icon="📈",
+
+    layout="wide"
+
 )
 
 load_css()
 
-# ------------------------------------
+# ==========================================
 # Download Market Data
-# ------------------------------------
+# ==========================================
 
 market = MarketDataEngine()
 
 market_data = market.download_watchlist()
 
-# Take the first stock from the watchlist
-ticker = list(market_data.keys())[0]
-
-df = market_data[ticker]
-
-# ------------------------------------
-# Latest Price
-# ------------------------------------
-
-price = float(df["Close"].iloc[-1])
-
-previous = float(df["Close"].iloc[-2])
-
-change = price - previous
-
-change_percent = (change / previous) * 100
-
-# ------------------------------------
-# Trade Quality Engine
-# ------------------------------------
+# ==========================================
+# Initialize Engines
+# ==========================================
 
 trade_engine = TradeQualityEngine()
 
-card = StockCard()
+dashboard_engine = DashboardEngine()
 
-# ------------------------------------
-# Display Cards
-# ------------------------------------
+# ==========================================
+# Build Dashboard Intelligence
+# ==========================================
 
-for ticker, df in market_data.items():
+dashboard = dashboard_engine.build(
 
-    latest = df.iloc[-1]
-    previous = df.iloc[-2]
+    market_data,
 
-    price = float(latest["Close"])
+    trade_engine,
 
-    change = price - float(previous["Close"])
+    ema,
 
-    pct_change = (change / float(previous["Close"])) * 100
+    macd,
 
-    # -------------------------------
-    # Expert Engines
-    # -------------------------------
+    rsi
 
-    ema_result = ema.calculate(df)
+)
 
-    macd_result = macd.calculate(df)
+# ==========================================
+# Render Command Center
+# ==========================================
 
-    rsi_result = rsi.calculate(df)
+command_center = CommandCenter()
 
-    # -------------------------------
-    # Trade Quality
-    # -------------------------------
-
-    trade = trade_engine.evaluate(
-
-        ema_result,
-
-        macd_result,
-
-        rsi_result
-
-    )
-
-    # -------------------------------
-    # Render Card
-    # -------------------------------
-    left, center, right = st.columns([1, 4, 1])
-    
-    with center:
-        card.render(
-    
-            ticker=ticker.replace(".NS", ""),
-    
-            company=ticker,
-    
-            price=price,
-    
-            change=change,
-    
-            pct_change=pct_change,
-    
-            trade=trade,
-    
-            df=df
-    
-        )
-    
-        st.markdown("<br>", unsafe_allow_html=True)
+command_center.render(dashboard)
