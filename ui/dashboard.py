@@ -1,65 +1,176 @@
 import streamlit as st
+import pandas as pd
 
 
-class Dashboard:
+class CommandCenter:
 
-    def show_stock_card(self, ticker, analysis):
+    """
+    =========================================================
+    Trade Decision Engine
 
-        trend = analysis["trend"]
-        momentum = analysis["momentum"]
-        risk = analysis["risk"]
+    Command Center UI
+    =========================================================
+    """
 
-        with st.container(border=True):
+    def render(self, dashboard):
 
-            st.subheader(ticker)
+        st.title("🚀 Trade Decision Engine")
+        st.caption("Command Center")
 
-            st.metric(
-                "Current Price",
-                f"₹ {trend['values']['price']}"
-            )
+        st.divider()
 
-            col1, col2, col3 = st.columns(3)
+        self.market_score(dashboard)
 
-            with col1:
+        st.divider()
 
-                st.markdown("### 📈 Trend")
+        self.market_summary(dashboard)
 
-                st.write(trend["analysis"]["alignment"])
+        st.divider()
 
-                st.caption(trend["analysis"]["price_vs_ema20"])
+        self.best_trade(dashboard)
 
-                st.caption(
-                    f"{trend['analysis']['distance_ema20_pct']} %"
-                )
+        st.divider()
 
-            with col2:
+        self.market_direction(dashboard)
 
-                st.markdown("### 🚀 Momentum")
+        st.divider()
 
-                st.write(
-                    momentum["analysis"]["momentum_bias"]
-                )
+        self.stock_table(dashboard)
 
-                st.caption(
-                    momentum["analysis"]["histogram_state"]
-                )
+    # =====================================================
+    # Market Score
+    # =====================================================
 
-                st.caption(
-                    momentum["analysis"]["strength"]
-                )
+    def market_score(self, dashboard):
 
-            with col3:
+        st.metric(
 
-                st.markdown("### ⚖ Risk")
+            label="Market Score",
 
-                st.write(
-                    risk["analysis"]["zone"]
-                )
+            value=f"{dashboard['market_score']}/100"
 
-                st.caption(
-                    f"RSI : {risk['values']['rsi']}"
-                )
+        )
 
-                st.caption(
-                    f"Risk : {risk['analysis']['risk']}"
-                )
+    # =====================================================
+    # Summary
+    # =====================================================
+
+    def market_summary(self, dashboard):
+
+        st.subheader("📊 Market Summary")
+
+        summary = dashboard["summary"]
+
+        c1, c2, c3, c4, c5 = st.columns(5)
+
+        c1.metric("🟢 READY",
+                  summary["READY"])
+
+        c2.metric("🟡 Minor",
+                  summary["READY (Minor Concerns)"])
+
+        c3.metric("🟠 High Risk",
+                  summary["READY (High Risk)"])
+
+        c4.metric("🔵 WAIT",
+                  summary["WAIT"])
+
+        c5.metric("🔴 AVOID",
+                  summary["AVOID"])
+
+    # =====================================================
+    # Best Trade
+    # =====================================================
+
+    def best_trade(self, dashboard):
+
+        trade = dashboard["best_trade"]
+
+        st.subheader("🏆 Today's Best Opportunity")
+
+        c1, c2, c3 = st.columns(3)
+
+        c1.metric(
+
+            "Ticker",
+
+            trade["ticker"]
+
+        )
+
+        c2.metric(
+
+            "Score",
+
+            f"{trade['score']}/100"
+
+        )
+
+        c3.metric(
+
+            "Status",
+
+            trade["status"]
+
+        )
+
+    # =====================================================
+    # Direction Summary
+    # =====================================================
+
+    def market_direction(self, dashboard):
+
+        direction = dashboard["direction_summary"]
+
+        st.subheader("🧭 Market Direction")
+
+        c1, c2, c3 = st.columns(3)
+
+        c1.metric("LONG",
+                  direction["LONG"])
+
+        c2.metric("SHORT",
+                  direction["SHORT"])
+
+        c3.metric("NEUTRAL",
+                  direction["NEUTRAL"])
+
+    # =====================================================
+    # Ranking Table
+    # =====================================================
+
+    def stock_table(self, dashboard):
+
+        st.subheader("📈 Ranked Opportunities")
+
+        rows = []
+
+        for stock in dashboard["stocks"]:
+
+            rows.append({
+
+                "Ticker": stock["ticker"],
+
+                "Score": stock["score"],
+
+                "Grade": stock["grade"],
+
+                "Status": stock["status"],
+
+                "Direction": stock["direction"],
+
+                "Confidence": stock["confidence"]
+
+            })
+
+        df = pd.DataFrame(rows)
+
+        st.dataframe(
+
+            df,
+
+            use_container_width=True,
+
+            hide_index=True
+
+        )
