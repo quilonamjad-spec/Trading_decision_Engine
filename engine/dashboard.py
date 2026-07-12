@@ -3,7 +3,7 @@
 Trade Decision Engine (TDE)
 
 Dashboard Engine
-Version : 1.0
+Version : 2.0
 =========================================================
 """
 
@@ -11,7 +11,7 @@ Version : 1.0
 class DashboardEngine:
 
     """
-    Creates a ranked dashboard from all
+    Builds the Market Dashboard from all
     Trade Quality results.
     """
 
@@ -19,11 +19,55 @@ class DashboardEngine:
 
         dashboard = []
 
+        # ----------------------------------------
+        # Dashboard Summary
+        # ----------------------------------------
+
+        summary = {
+
+            "READY": 0,
+
+            "READY (Minor Concerns)": 0,
+
+            "READY (High Risk)": 0,
+
+            "WAIT": 0,
+
+            "AVOID": 0
+
+        }
+
+        direction_summary = {
+
+            "LONG": 0,
+
+            "SHORT": 0,
+
+            "NEUTRAL": 0
+
+        }
+
+        confidence_summary = {
+
+            "High": 0,
+
+            "Medium": 0,
+
+            "Low": 0
+
+        }
+
+        total_score = 0
+
+        # ----------------------------------------
+        # Process Every Stock
+        # ----------------------------------------
+
         for ticker, df in market_data.items():
 
-            # -----------------------------
-            # Expert Results
-            # -----------------------------
+            # ------------------------------------
+            # Indicator Engines
+            # ------------------------------------
 
             ema_result = ema.calculate(df)
 
@@ -31,23 +75,26 @@ class DashboardEngine:
 
             rsi_result = rsi.calculate(df)
 
-            # -----------------------------
+            # ------------------------------------
             # Trade Quality
-            # -----------------------------
+            # ------------------------------------
 
             trade = trade_engine.evaluate(
 
                 ema_result,
+
                 macd_result,
+
                 rsi_result
 
             )
 
-            # -----------------------------
+            # ------------------------------------
             # Latest Price
-            # -----------------------------
+            # ------------------------------------
 
             latest = df.iloc[-1]
+
             previous = df.iloc[-2]
 
             price = float(latest["Close"])
@@ -55,15 +102,17 @@ class DashboardEngine:
             change = price - float(previous["Close"])
 
             pct_change = (
+
                 change /
                 float(previous["Close"])
+
             ) * 100
 
-            # -----------------------------
+            # ------------------------------------
             # Dashboard Row
-            # -----------------------------
+            # ------------------------------------
 
-            dashboard.append({
+            row = {
 
                 "ticker": ticker,
 
@@ -87,11 +136,25 @@ class DashboardEngine:
 
                 "df": df
 
-            })
+            }
 
-        # -----------------------------------
-        # Highest Score First
-        # -----------------------------------
+            dashboard.append(row)
+
+            # ------------------------------------
+            # Update Summary
+            # ------------------------------------
+
+            summary[trade["status"]] += 1
+
+            direction_summary[trade["direction"]] += 1
+
+            confidence_summary[trade["confidence"]] += 1
+
+            total_score += trade["score"]
+
+        # ----------------------------------------
+        # Sort Dashboard
+        # ----------------------------------------
 
         dashboard.sort(
 
@@ -101,4 +164,36 @@ class DashboardEngine:
 
         )
 
-        return dashboard
+        # ----------------------------------------
+        # Market Statistics
+        # ----------------------------------------
+
+        market_score = round(
+
+            total_score / len(dashboard),
+
+            1
+
+        )
+
+        best_trade = dashboard[0]
+
+        # ----------------------------------------
+        # Return Dashboard Intelligence
+        # ----------------------------------------
+
+        return {
+
+            "summary": summary,
+
+            "market_score": market_score,
+
+            "best_trade": best_trade,
+
+            "direction_summary": direction_summary,
+
+            "confidence_summary": confidence_summary,
+
+            "stocks": dashboard
+
+        }
