@@ -52,11 +52,11 @@ load_css()
 # Title
 # ==========================================================
 
-st.title("Trade Decision Engine")
+#st.title("Trade Decision Engine")
 
-st.caption("AI Powered Trading Decision Support System")
+#st.caption("AI Powered Trading Decision Support System")
 
-st.divider()
+#st.divider()
 
 # ==========================================================
 # Download Market Data
