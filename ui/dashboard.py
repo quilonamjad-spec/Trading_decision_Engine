@@ -5,11 +5,9 @@ from ui.components.stock_card_v2 import StockCard
 
 
 class CommandCenter:
-
     """
     ============================================================
     Trade Decision Engine
-
     Command Center v2.0
     ============================================================
     """
@@ -18,9 +16,9 @@ class CommandCenter:
 
         self.card = StockCard()
 
-    # ============================================================
+    # ==========================================================
     # Main Render
-    # ============================================================
+    # ==========================================================
 
     def render(self, dashboard):
 
@@ -30,37 +28,48 @@ class CommandCenter:
 
         st.divider()
 
+        # -----------------------------------
+        # Market Overview
+        # -----------------------------------
+
         self.market_overview(dashboard)
 
         st.divider()
+
+        # -----------------------------------
+        # Top Opportunities
+        # -----------------------------------
 
         self.top_opportunities(dashboard)
 
         st.divider()
 
+        # -----------------------------------
+        # Ranked Opportunities
+        # -----------------------------------
+
         self.stock_table(dashboard)
 
-        # -----------------------------
+        # -----------------------------------
         # Decision Dialog
-        # -----------------------------
+        # -----------------------------------
 
         if "selected_stock" in st.session_state:
 
             self.show_decision_dialog()
-
-    # ============================================================
+    # ==========================================================
     # Market Overview
-    # ============================================================
+    # ==========================================================
 
     def market_overview(self, dashboard):
 
-        col1, col2, col3 = st.columns(3)
+        score_col, summary_col, direction_col = st.columns([1, 1.3, 1])
 
-        # ------------------------------------
+        # ======================================================
         # Market Score
-        # ------------------------------------
+        # ======================================================
 
-        with col1:
+        with score_col:
 
             with st.container(border=True):
 
@@ -85,19 +94,29 @@ class CommandCenter:
 
                 st.metric(
 
-                    "Overall",
+                    label="Overall Score",
 
-                    f"{score}/100"
+                    value=f"{score}/100"
 
                 )
 
-                st.success(health)
+                st.markdown(
+                    f"""
+                    <div style='text-align:center;
+                                font-size:18px;
+                                font-weight:bold;
+                                padding-top:8px;'>
+                        {health}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
-        # ------------------------------------
+        # ======================================================
         # Market Summary
-        # ------------------------------------
+        # ======================================================
 
-        with col2:
+        with summary_col:
 
             with st.container(border=True):
 
@@ -105,51 +124,29 @@ class CommandCenter:
 
                 summary = dashboard["summary"]
 
-                st.metric(
+                c1, c2, c3 = st.columns(3)
 
-                    "🟢 READY",
+                with c1:
 
-                    summary["READY"]
+                    st.metric("🟢 READY", summary["READY"])
 
-                )
+                    st.metric("🔵 WAIT", summary["WAIT"])
 
-                st.metric(
+                with c2:
 
-                    "🟡 Minor",
+                    st.metric("🟡 Minor", summary["READY (Minor Concerns)"])
 
-                    summary["READY (Minor Concerns)"]
+                with c3:
 
-                )
+                    st.metric("🟠 High Risk", summary["READY (High Risk)"])
 
-                st.metric(
+                    st.metric("🔴 AVOID", summary["AVOID"])
 
-                    "🟠 High Risk",
-
-                    summary["READY (High Risk)"]
-
-                )
-
-                st.metric(
-
-                    "🔵 WAIT",
-
-                    summary["WAIT"]
-
-                )
-
-                st.metric(
-
-                    "🔴 AVOID",
-
-                    summary["AVOID"]
-
-                )
-
-        # ------------------------------------
+        # ======================================================
         # Market Direction
-        # ------------------------------------
+        # ======================================================
 
-        with col3:
+        with direction_col:
 
             with st.container(border=True):
 
@@ -159,7 +156,7 @@ class CommandCenter:
 
                 st.metric(
 
-                    "LONG",
+                    "📈 LONG",
 
                     direction["LONG"]
 
@@ -167,7 +164,7 @@ class CommandCenter:
 
                 st.metric(
 
-                    "SHORT",
+                    "📉 SHORT",
 
                     direction["SHORT"]
 
@@ -175,15 +172,14 @@ class CommandCenter:
 
                 st.metric(
 
-                    "NEUTRAL",
+                    "➖ NEUTRAL",
 
                     direction["NEUTRAL"]
 
                 )
-
-    # ============================================================
-    # Top Opportunities
-    # ============================================================
+    # ==========================================================
+    # Top 5 Opportunities
+    # ==========================================================
 
     def top_opportunities(self, dashboard):
 
@@ -191,21 +187,9 @@ class CommandCenter:
 
         top5 = dashboard["stocks"][:5]
 
+        medals = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"]
+
         cols = st.columns(5)
-
-        medals = [
-
-            "🥇",
-
-            "🥈",
-
-            "🥉",
-
-            "4️⃣",
-
-            "5️⃣"
-
-        ]
 
         for col, medal, stock in zip(cols, medals, top5):
 
@@ -213,51 +197,85 @@ class CommandCenter:
 
                 with st.container(border=True):
 
+                    ticker = stock["ticker"].replace(".NS", "")
+
                     st.markdown(
-
-                        f"### {medal} {stock['ticker'].replace('.NS','')}"
-
+                        f"<h4 style='text-align:center'>{medal} {ticker}</h4>",
+                        unsafe_allow_html=True
                     )
+
+                    # --------------------------
+                    # Status
+                    # --------------------------
 
                     status = stock["status"]
 
                     if "READY" in status:
-                    
                         st.success(status)
-                    
+
                     elif "WAIT" in status:
-                    
                         st.warning(status)
-                    
+
                     else:
-                    
                         st.error(status)
 
-                    st.markdown(
-
-                        f"## {stock['score']}/100"
-
-                    )
+                    # --------------------------
+                    # Trade Score
+                    # --------------------------
 
                     st.markdown(
-
-                        f"**{stock['grade']}**"
-
-                    )
-
-                     st.markdown(
-
-                        f"<h3 style='text-align:center'>{stock['trade']['stars']}</h3>",
-                    
+                        f"""
+                        <div style='text-align:center;
+                                    font-size:28px;
+                                    font-weight:bold;
+                                    padding-top:5px;'>
+                            {stock["score"]}/100
+                        </div>
+                        """,
                         unsafe_allow_html=True
-                    
                     )
+
+                    # --------------------------
+                    # Grade
+                    # --------------------------
+
+                    st.markdown(
+                        f"""
+                        <div style='text-align:center;
+                                    color:#FFD54F;
+                                    font-size:18px;
+                                    font-weight:bold;'>
+                            {stock["grade"]}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                    # --------------------------
+                    # Stars
+                    # --------------------------
+
+                    st.markdown(
+                        f"""
+                        <div style='text-align:center;
+                                    font-size:20px;
+                                    padding-top:5px;
+                                    padding-bottom:10px;'>
+                            {stock["trade"]["stars"]}
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+
+                    # --------------------------
+                    # Analyze Button
+                    # --------------------------
 
                     if st.button(
 
-                        "📊 Analyze",
+                        "🔍 Analyze",
 
-                        key=f"analyse_{stock['ticker']}"
+                        key=f"analyze_{ticker}"
 
                     ):
 
@@ -265,70 +283,75 @@ class CommandCenter:
 
                         st.rerun()
 
-        # ============================================================
-        # Decision Dialog
-        # ============================================================
-        
-        @st.dialog("📊 Decision Analysis", width="large")
-        def show_decision_dialog(self):
-        
-            stock = st.session_state["selected_stock"]
-        
-            self.card.render(
-        
-                ticker=stock["ticker"].replace(".NS", ""),
-        
-                company=stock["ticker"],
-        
-                price=stock["price"],
-        
-                change=stock["change"],
-        
-                pct_change=stock["pct_change"],
-        
-                trade=stock["trade"],
-        
-                df=stock["df"]
-        
-            )
-        
-        
-        # ============================================================
-        # Ranked Opportunities
-        # ============================================================
-        
-        def stock_table(self, dashboard):
-        
-            st.subheader("📈 Ranked Opportunities")
-        
-            rows = []
-        
-            for stock in dashboard["stocks"]:
-        
-                rows.append({
-        
-                    "Ticker": stock["ticker"].replace(".NS", ""),
-        
-                    "Score": stock["score"],
-        
-                    "Grade": stock["grade"],
-        
-                    "Status": stock["status"],
-        
-                    "Direction": stock["direction"],
-        
-                    "Confidence": stock["confidence"]
-        
-                })
-        
-            df = pd.DataFrame(rows)
-        
-            st.dataframe(
-        
-                df,
-        
-                hide_index=True,
-        
-                use_container_width=True
-        
-            )
+    # ==========================================================
+    # Decision Card
+    # ==========================================================
+
+    def show_decision_dialog(self):
+
+        if "selected_stock" not in st.session_state:
+            return
+
+        st.divider()
+
+        st.subheader("📊 Decision Analysis")
+
+        stock = st.session_state["selected_stock"]
+
+        self.card.render(
+
+            ticker=stock["ticker"].replace(".NS", ""),
+
+            company=stock["ticker"],
+
+            price=stock["price"],
+
+            change=stock["change"],
+
+            pct_change=stock["pct_change"],
+
+            trade=stock["trade"],
+
+            df=stock["df"]
+
+        )
+
+     # ==========================================================
+    # Ranked Opportunities
+    # ==========================================================
+
+    def stock_table(self, dashboard):
+
+        st.subheader("📈 Ranked Opportunities")
+
+        rows = []
+
+        for stock in dashboard["stocks"]:
+
+            rows.append({
+
+                "Ticker": stock["ticker"].replace(".NS", ""),
+
+                "Score": stock["score"],
+
+                "Grade": stock["grade"],
+
+                "Status": stock["status"],
+
+                "Direction": stock["direction"],
+
+                "Confidence": stock["confidence"]
+
+            })
+
+        df = pd.DataFrame(rows)
+
+        st.dataframe(
+
+            df,
+
+            hide_index=True,
+
+            use_container_width=True
+
+        )
