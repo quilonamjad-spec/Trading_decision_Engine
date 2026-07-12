@@ -1,18 +1,39 @@
 """
-Trade Decision Engine
+====================================================
+Trade Decision Engine (TDE)
 
-Watchlist Loader
+Universe Loader
+====================================================
 """
 
 import json
+from pathlib import Path
 
 
-WATCHLIST_FILE = "watchlist.json"
+# --------------------------------------------------
+# Folder containing all universes
+# --------------------------------------------------
+
+UNIVERSE_FOLDER = Path("universes")
 
 
-def load_watchlist():
+def load_universe(universe: str = "nifty50"):
 
-    with open(WATCHLIST_FILE, "r") as file:
+    """
+    Load a stock universe.
+
+    Example
+    -------
+    load_universe("nifty50")
+
+    Reads:
+
+    universes/nifty50.json
+    """
+
+    universe_file = UNIVERSE_FOLDER / f"{universe}.json"
+
+    with open(universe_file, "r") as file:
 
         data = json.load(file)
 
