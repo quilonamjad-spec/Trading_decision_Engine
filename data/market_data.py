@@ -13,7 +13,7 @@ from typing import Dict
 import pandas as pd
 import yfinance as yf
 
-from utils.watchlist import load_watchlist
+from utils.watchlist import load_universe
 import config
 
 
@@ -37,7 +37,7 @@ class MarketDataEngine:
 
     def __init__(self):
 
-        self.watchlist = load_watchlist()
+        self.watchlist = load_universe("nifty50")
 
         self.interval = config.INTERVAL
 
