@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-
+from ui.components.stock_card_v2 import StockCard
 
 class CommandCenter:
 
@@ -27,7 +27,7 @@ class CommandCenter:
 
         st.divider()
 
-        self.best_trade(dashboard)
+        self.top_opportunities(dashboard)
 
         st.divider()
 
@@ -36,6 +36,35 @@ class CommandCenter:
         st.divider()
 
         self.stock_table(dashboard)
+        if "selected_stock" in st.session_state:
+
+            st.divider()
+        
+            st.header("📊 Decision Card")
+        
+            stock = st.session_state["selected_stock"]
+        
+            self.card.render(
+        
+                ticker=stock["ticker"].replace(".NS",""),
+        
+                company=stock["ticker"],
+        
+                price=stock["price"],
+        
+                change=stock["change"],
+        
+                pct_change=stock["pct_change"],
+        
+                trade=stock["trade"],
+        
+                df=stock["df"]
+        
+            )
+        
+        st.divider()
+        
+        self.card = StockCard()
 
     # =====================================================
     # Market Score
@@ -82,37 +111,63 @@ class CommandCenter:
     # Best Trade
     # =====================================================
 
-    def best_trade(self, dashboard):
+  def top_opportunities(self, dashboard):
 
-        trade = dashboard["best_trade"]
+    st.subheader("🏆 Top 5 Opportunities")
 
-        st.subheader("🏆 Today's Best Opportunity")
+    top5 = dashboard["stocks"][:5]
 
-        c1, c2, c3 = st.columns(3)
+    for stock in top5:
 
-        c1.metric(
+        with st.container(border=True):
 
-            "Ticker",
+            c1, c2, c3, c4, c5 = st.columns([3,2,2,2,2])
 
-            trade["ticker"]
+            with c1:
 
-        )
+                st.subheader(stock["ticker"])
 
-        c2.metric(
+            with c2:
 
-            "Score",
+                st.metric(
 
-            f"{trade['score']}/100"
+                    "Score",
 
-        )
+                    f"{stock['score']}/100"
 
-        c3.metric(
+                )
 
-            "Status",
+            with c3:
 
-            trade["status"]
+                st.metric(
 
-        )
+                    "Status",
+
+                    stock["status"]
+
+                )
+
+            with c4:
+
+                st.metric(
+
+                    "Direction",
+
+                    stock["direction"]
+
+                )
+
+            with c5:
+
+                if st.button(
+
+                    "▶ Analyze",
+
+                    key=f"analyse_{stock['ticker']}"
+
+                ):
+
+                    st.session_state["selected_stock"] = stock
 
     # =====================================================
     # Direction Summary
