@@ -16,7 +16,7 @@ trade_engine = TradeQualityEngine()
 
 dashboard = DashboardEngine()
 
-rows = dashboard.build(
+result = dashboard.build(
 
     market_data,
 
@@ -30,11 +30,31 @@ rows = dashboard.build(
 
 )
 
-print("\n==============================")
-print("TDE DASHBOARD TEST")
-print("==============================\n")
+print("\n===================================")
+print("TDE DASHBOARD ENGINE TEST")
+print("===================================\n")
 
-for row in rows:
+print("Market Score :", result["market_score"])
+
+print("\nSummary")
+print(result["summary"])
+
+print("\nDirection Summary")
+print(result["direction_summary"])
+
+print("\nConfidence Summary")
+print(result["confidence_summary"])
+
+print("\nBest Opportunity")
+print(result["best_trade"]["ticker"],
+      result["best_trade"]["score"],
+      result["best_trade"]["status"])
+
+print("\n===================================")
+print("STOCK RANKING")
+print("===================================\n")
+
+for row in result["stocks"]:
 
     print(
 
