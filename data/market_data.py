@@ -34,13 +34,20 @@ class MarketDataEngine:
     • Score stocks
     • Make recommendations
     """
-
-    def __init__(self):
-
-        self.watchlist = load_universe("nifty50")
-
+    def __init__(
+    
+        self,
+    
+        universe="nifty50"
+    
+    ):
+    
+        self.universe = universe
+    
+        self.watchlist = load_universe(universe)
+    
         self.interval = config.INTERVAL
-
+    
         self.period = config.PERIOD
 
     def download_watchlist(self) -> Dict[str, pd.DataFrame]:
