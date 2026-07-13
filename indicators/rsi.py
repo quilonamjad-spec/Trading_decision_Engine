@@ -7,6 +7,8 @@ RSI Engine V2
 """
 
 from typing import Dict
+from research.calibration_manager import CalibrationManager
+calibration = CalibrationManager()
 import pandas as pd
 
 
@@ -71,19 +73,18 @@ def calculate(df: pd.DataFrame, period: int = 14, candle: int = -1) -> Dict:
 
     # Score
 
+    score = calibration.get_risk_score(risk)
+
     if risk == "Low":
-
-        score = 30
+    
         confidence = "High"
-
+    
     elif risk == "Medium":
-
-        score = 20
+    
         confidence = "Medium"
-
+    
     else:
-
-        score = 10
+    
         confidence = "Low"
 
     # Direction
