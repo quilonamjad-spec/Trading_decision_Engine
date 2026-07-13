@@ -11,9 +11,9 @@
 
         "momentum": {
 
-            "strong": 35,
-            "neutral": 20,
-            "weak": 18
+            "bullish": 35,
+            "bearish": 35,
+            "neutral": 18
 
         },
 
