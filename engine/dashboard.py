@@ -86,7 +86,8 @@ class DashboardEngine:
 
                 macd_result,
 
-                rsi_result,
+                rsi_result
+            )
                 # ------------------------------------
                 # Engine Health Monitor
                 # ------------------------------------
