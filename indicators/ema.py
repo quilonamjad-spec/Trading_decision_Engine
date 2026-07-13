@@ -7,6 +7,8 @@ EMA Engine V3
 """
 
 from typing import Dict
+from research.calibration_manager import CalibrationManager
+calibration = CalibrationManager()
 import pandas as pd
 import config
 
@@ -61,21 +63,20 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
     # Decision
     # ----------------------------------
 
-    if alignment == "Bullish":
+    score = calibration.get_trend_score(alignment)
 
-        score = 35
+    if alignment == "Bullish":
+    
         direction = "LONG"
         confidence = "High"
-
+    
     elif alignment == "Bearish":
-
-        score = 35
+    
         direction = "SHORT"
         confidence = "High"
-
+    
     else:
-
-        score = 18
+    
         direction = "NEUTRAL"
         confidence = "Medium"
 
