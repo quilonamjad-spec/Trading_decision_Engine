@@ -19,9 +19,9 @@
 
         "risk": {
 
-            "healthy": 30,
-            "warning": 15,
-            "high": 5
+            "low": 30,
+            "medium": 20,
+            "high": 10
 
         }
 
