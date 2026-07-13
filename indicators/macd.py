@@ -7,6 +7,8 @@ MACD Engine V2
 """
 
 from typing import Dict
+from research.calibration_manager import CalibrationManager
+calibration = CalibrationManager()
 import pandas as pd
 
 
@@ -87,19 +89,18 @@ def calculate(df: pd.DataFrame, candle: int = -1) -> Dict:
     # Decision
     # ----------------------------------
 
+    score = calibration.get_momentum_score(momentum_bias)
+
     if momentum_bias == "Bullish":
-
-        score = 35
+    
         direction = "LONG"
-
+    
     elif momentum_bias == "Bearish":
-
-        score = 35
+    
         direction = "SHORT"
-
+    
     else:
-
-        score = 18
+    
         direction = "NEUTRAL"
 
     # Confidence
