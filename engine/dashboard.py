@@ -6,7 +6,7 @@ Dashboard Engine
 Version : 2.0
 =========================================================
 """
-
+from research.engine_health import EngineHealth
 
 class DashboardEngine:
 
@@ -18,6 +18,7 @@ class DashboardEngine:
     def build(self, market_data, trade_engine, ema, macd, rsi):
 
         dashboard = []
+        health = EngineHealth()
 
         # ----------------------------------------
         # Dashboard Summary
@@ -86,6 +87,23 @@ class DashboardEngine:
                 macd_result,
 
                 rsi_result
+                # ------------------------------------
+                # Engine Health Monitor
+                # ------------------------------------
+                
+                health.add_stock(
+                
+                    trend_score=ema_result["decision"]["score"],
+                
+                    momentum_score=macd_result["decision"]["score"],
+                
+                    risk_score=rsi_result["decision"]["score"],
+                
+                    final_score=trade["score"],
+                
+                    status=trade["status"]
+                
+                )
 
             )
 
@@ -177,6 +195,11 @@ class DashboardEngine:
         )
 
         best_trade = dashboard[0]
+        # ----------------------------------------
+        # Engine Diagnostics
+        # ----------------------------------------
+        
+        health.report()
 
         # ----------------------------------------
         # Return Dashboard Intelligence
