@@ -1,1 +1,26 @@
+{
+    "positive": {
+        "trend": 20,
+        "momentum": 20,
+        "risk": 15,
+        "pattern": 15,
+        "volume": 10
+    },
 
+    "penalties": {
+        "conflicting_signals": 10,
+        "overextended": 10,
+        "weak_volume": 8,
+        "late_entry": 5
+    },
+
+    "qualification": {
+        "minimum_trend": 60,
+        "minimum_consensus": 70
+    },
+
+    "research": {
+        "version": "B2",
+        "name": "Baseline Calibration"
+    }
+}
