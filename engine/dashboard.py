@@ -92,17 +92,17 @@ class DashboardEngine:
                 # Engine Health Monitor
                 # ------------------------------------
                 
-                health.add_stock(
-                
-                    trend_score=ema_result["decision"]["score"],
-                
-                    momentum_score=macd_result["decision"]["score"],
-                
-                    risk_score=rsi_result["decision"]["score"],
-                
-                    final_score=trade["score"],
-                
-                    status=trade["status"]
+            health.add_stock(
+            
+                trend_score=ema_result["decision"]["score"],
+            
+                momentum_score=macd_result["decision"]["score"],
+            
+                risk_score=rsi_result["decision"]["score"],
+            
+                final_score=trade["score"],
+            
+                status=trade["status"]
                 
             )
 
