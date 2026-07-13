@@ -106,7 +106,7 @@ class DashboardEngine:
                 
                 )
 
-            )
+            
 
             # ------------------------------------
             # Latest Price
