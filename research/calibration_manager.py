@@ -1,7 +1,7 @@
 """
 ====================================================
 
-Trade Decision Engine
+Trade Decision Engine (TDE)
 
 Calibration Manager
 
@@ -25,63 +25,102 @@ class CalibrationManager:
 
             self.config = json.load(file)
 
-    # -------------------------------------------------
+    # =================================================
+    # Trend Expert
+    # =================================================
+
+    def get_trend_score(self, alignment: str):
+
+        trend = self.config["experts"]["trend"]
+
+        if alignment == "Bullish":
+            return trend["bullish"]
+
+        elif alignment == "Bearish":
+            return trend["bearish"]
+
+        return trend["mixed"]
+
+    # =================================================
+    # Momentum Expert
+    # =================================================
+
+    def get_momentum_score(self, state: str):
+
+        momentum = self.config["experts"]["momentum"]
+
+        if state == "Strong":
+            return momentum["strong"]
+
+        elif state == "Neutral":
+            return momentum["neutral"]
+
+        return momentum["weak"]
+
+    # =================================================
+    # Risk Expert
+    # =================================================
+
+    def get_risk_score(self, state: str):
+
+        risk = self.config["experts"]["risk"]
+
+        if state == "Healthy":
+            return risk["healthy"]
+
+        elif state == "Warning":
+            return risk["warning"]
+
+        return risk["high"]
+
+    # =================================================
+    # Penalties
+    # =================================================
 
     @property
-    def trend_weight(self):
-
-        return self.config["positive"]["trend"]
-
-    @property
-    def momentum_weight(self):
-
-        return self.config["positive"]["momentum"]
-
-    @property
-    def risk_weight(self):
-
-        return self.config["positive"]["risk"]
-
-    @property
-    def pattern_weight(self):
-
-        return self.config["positive"]["pattern"]
-
-    @property
-    def volume_weight(self):
-
-        return self.config["positive"]["volume"]
-
-    # -------------------------------------------------
-
-    @property
-    def penalty_conflicting(self):
+    def conflicting_penalty(self):
 
         return self.config["penalties"]["conflicting_signals"]
 
     @property
-    def penalty_overextended(self):
+    def overextended_penalty(self):
 
         return self.config["penalties"]["overextended"]
 
     @property
-    def penalty_volume(self):
+    def weak_volume_penalty(self):
 
         return self.config["penalties"]["weak_volume"]
 
     @property
-    def penalty_late_entry(self):
+    def late_entry_penalty(self):
 
         return self.config["penalties"]["late_entry"]
 
-    # -------------------------------------------------
+    # =================================================
+    # Qualification
+    # =================================================
 
     @property
-    def qualification_trend(self):
+    def minimum_trend(self):
 
         return self.config["qualification"]["minimum_trend"]
 
     @property
-    def qualification_consensus(self):
+    def minimum_consensus(self):
 
         return self.config["qualification"]["minimum_consensus"]
+
+    # =================================================
+    # Metadata
+    # =================================================
+
+    @property
+    def version(self):
+
+        return self.config["research"]["version"]
+
+    @property
+    def calibration_name(self):
+
+        return self.config["research"]["name"]
