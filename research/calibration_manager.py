@@ -45,17 +45,17 @@ class CalibrationManager:
     # Momentum Expert
     # =================================================
 
-    def get_momentum_score(self, state: str):
+    def get_momentum_score(self, bias: str):
 
-        momentum = self.config["experts"]["momentum"]
+    momentum = self.config["experts"]["momentum"]
 
-        if state == "Strong":
-            return momentum["strong"]
+    if bias == "Bullish":
+        return momentum["bullish"]
 
-        elif state == "Neutral":
-            return momentum["neutral"]
+    elif bias == "Bearish":
+        return momentum["bearish"]
 
-        return momentum["weak"]
+    return momentum["neutral"]
 
     # =================================================
     # Risk Expert
