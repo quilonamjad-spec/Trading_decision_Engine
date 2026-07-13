@@ -61,17 +61,17 @@ class CalibrationManager:
     # Risk Expert
     # =================================================
 
-    def get_risk_score(self, state: str):
+    def get_risk_score(self, risk: str):
 
-        risk = self.config["experts"]["risk"]
-
-        if state == "Healthy":
-            return risk["healthy"]
-
-        elif state == "Warning":
-            return risk["warning"]
-
-        return risk["high"]
+        risk_scores = self.config["experts"]["risk"]
+    
+        if risk == "Low":
+            return risk_scores["low"]
+    
+        elif risk == "Medium":
+            return risk_scores["medium"]
+    
+        return risk_scores["high"]
 
     # =================================================
     # Penalties
