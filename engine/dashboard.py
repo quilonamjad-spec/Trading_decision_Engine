@@ -104,7 +104,7 @@ class DashboardEngine:
                 
                     status=trade["status"]
                 
-                )
+            )
 
             
 
