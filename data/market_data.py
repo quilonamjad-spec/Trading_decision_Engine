@@ -38,7 +38,7 @@ class MarketDataEngine:
     
         self,
     
-        universe="nifty100"
+        universe="nifty50"
     
     ):
     
