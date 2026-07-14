@@ -7,6 +7,9 @@ Version : 2.0
 =========================================================
 """
 from research.engine_health import EngineHealth
+from engine.gatekeeper import Gatekeeper
+
+gatekeeper = Gatekeeper()
 
 class DashboardEngine:
 
