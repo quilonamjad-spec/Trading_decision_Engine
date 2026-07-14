@@ -48,7 +48,7 @@ class Gatekeeper:
         # Reject High Risk setups
         # -----------------------------------------
 
-        risk = rsi_result["decision"]["risk"]
+        risk = rsi_result["analysis"]["risk"]
 
         if risk == "High":
 
