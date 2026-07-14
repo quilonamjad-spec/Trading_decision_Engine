@@ -6,7 +6,9 @@ Trade Quality Engine
 Version : 2.1
 =========================================================
 """
+from engine.gatekeeper import Gatekeeper
 
+gatekeeper = Gatekeeper()
 
 class TradeQualityEngine:
 
@@ -35,6 +37,11 @@ class TradeQualityEngine:
         trend = ema_result["decision"]
         momentum = macd_result["decision"]
         risk = rsi_result["decision"]
+        gate = gatekeeper.qualify(
+            ema_result,
+            macd_result,
+            rsi_result
+        )
 
         # -----------------------------------------
         # Score
@@ -87,6 +94,9 @@ class TradeQualityEngine:
             "direction": direction,
 
             "confidence": confidence,
+            "qualified": gate["qualified"],
+
+            "gatekeeper": gate,
 
             "breakdown": {
 
