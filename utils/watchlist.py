@@ -17,7 +17,7 @@ from pathlib import Path
 UNIVERSE_FOLDER = Path("universes")
 
 
-def load_universe(universe: str = "nifty50"):
+def load_universe(universe: str = "nifty100"):
 
     """
     Load a stock universe.
