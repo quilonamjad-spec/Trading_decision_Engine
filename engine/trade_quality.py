@@ -95,6 +95,9 @@ class TradeQualityEngine:
         return {
 
             "score": total_score,
+            "raw_score": raw_score,
+
+            "consensus": consensus,
 
             "grade": self.get_grade(total_score),
 
