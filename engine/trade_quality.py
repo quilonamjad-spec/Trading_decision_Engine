@@ -7,8 +7,10 @@ Version : 2.1
 =========================================================
 """
 from engine.gatekeeper import Gatekeeper
+from engine.consensus import ConsensusEngine
 
 gatekeeper = Gatekeeper()
+consensus_engine = ConsensusEngine()
 
 class TradeQualityEngine:
 
@@ -42,15 +44,24 @@ class TradeQualityEngine:
             macd_result,
             rsi_result
         )
+        consensus = consensus_engine.evaluate(
+            ema_result,
+            macd_result,
+            rsi_result
+        )
 
         # -----------------------------------------
         # Score
         # -----------------------------------------
 
-        total_score = (
+        raw_score = (
             trend["score"]
             + momentum["score"]
             + risk["score"]
+        )
+        
+        total_score = round(
+            raw_score * consensus["multiplier"]
         )
 
         # -----------------------------------------
