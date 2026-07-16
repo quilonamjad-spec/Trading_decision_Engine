@@ -8,8 +8,13 @@ Version : 2.0
 """
 from research.engine_health import EngineHealth
 from engine.gatekeeper import Gatekeeper
+from engine.memory import DecisionMemory
+from engine.conviction import ConvictionEngine
 
 gatekeeper = Gatekeeper()
+memory = DecisionMemory()
+
+conviction_engine = ConvictionEngine()
 
 class DashboardEngine:
 
@@ -91,6 +96,37 @@ class DashboardEngine:
 
                 rsi_result
             )
+            # ------------------------------------
+            # Decision Memory
+            # ------------------------------------
+            
+            memory.record(
+            
+                symbol=ticker,
+            
+                consensus=trade["consensus"]["confidence"],
+            
+                trade_score=trade["score"],
+            
+                status=trade["status"],
+            
+                reason=trade["reason"]
+            
+            )
+            
+            history = memory.history(ticker)
+            
+            conviction = conviction_engine.evaluate(history)
+            
+            print()
+            
+            print("=" * 70)
+            
+            print(ticker)
+            
+            print(conviction)
+            
+            print("=" * 70)
                 # ------------------------------------
                 # Engine Health Monitor
                 # ------------------------------------
