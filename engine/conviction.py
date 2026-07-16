@@ -4,213 +4,229 @@
 Trade Decision Engine (TDE)
 
 Conviction Engine
-Version 1.0
+Version : 2.0
 
 Purpose
 -------
-Reads the recent Decision Memory and determines
-whether confidence is improving, stable or weakening.
+Analyses Decision Memory and reports
+how conviction is evolving.
 
-This module NEVER decides:
+It NEVER decides whether to:
 
 - Buy
 - Sell
+- Hold
 - Exit
-
-It only reports how conviction is evolving.
 
 =========================================================
 """
 
+
 class ConvictionEngine:
 
-    def __init__(self):
+    def __init__(self, context_window=6):
 
-        pass
+        self.context_window = context_window
 
     # ----------------------------------------------------
 
     def evaluate(self, history):
-
-        """
-        history
-
-        List returned by DecisionMemory.history(symbol)
-        """
-
-        # -----------------------------------------------
-        # Not enough history
-        # -----------------------------------------------
 
         if len(history) < 2:
 
             return {
 
                 "current": None,
-
+                "previous": None,
                 "average": None,
-
-                "direction": "Unknown",
-
-                "strength": "Unknown",
-
-                "persistence": 0,
 
                 "change": 0,
 
-                "message": "Insufficient history"
+                "immediate": "Unknown",
+                "context": "Insufficient History",
+
+                "persistence": 0,
+
+                "velocity": "Unknown",
+
+                "message": "Need more observations."
 
             }
 
-        # -----------------------------------------------
-        # Extract consensus history
-        # -----------------------------------------------
+        # ------------------------------------------------
+        # Extract consensus values
+        # ------------------------------------------------
 
-        values = [
-
-            item["consensus"]
-
-            for item in history
-
-        ]
+        values = [item["consensus"] for item in history]
 
         current = values[-1]
-
         previous = values[-2]
 
-        average = round(
+        average = round(sum(values) / len(values), 2)
 
-            sum(values) / len(values),
+        change = current - previous
 
-            2
+        # ------------------------------------------------
+        # Immediate Analysis
+        # ------------------------------------------------
 
-        )
+        if change >= 2:
 
-        change = round(
+            immediate = "Improving"
 
-            current - previous,
+        elif change <= -2:
 
-            2
-
-        )
-
-        # -----------------------------------------------
-        # Detect Direction
-        # -----------------------------------------------
-
-        if change > 2:
-
-            direction = "Rising"
-
-        elif change < -2:
-
-            direction = "Falling"
+            immediate = "Weakening"
 
         else:
 
-            direction = "Stable"
+            immediate = "Stable"
 
-        # -----------------------------------------------
-        # Persistence
-        #
-        # Count how many consecutive
-        # observations continue
-        # the same trend.
-        # -----------------------------------------------
+        # ------------------------------------------------
+        # Context Window
+        # ------------------------------------------------
 
-        persistence = 1
+        window = values[-self.context_window:]
 
-        for i in range(len(values) - 1, 0, -1):
+        rising = 0
+        falling = 0
+        flat = 0
 
-            diff = values[i] - values[i - 1]
+        for i in range(1, len(window)):
 
-            if direction == "Rising" and diff > 0:
+            diff = window[i] - window[i - 1]
 
-                persistence += 1
+            if diff >= 2:
 
-            elif direction == "Falling" and diff < 0:
+                rising += 1
 
-                persistence += 1
+            elif diff <= -2:
 
-            elif direction == "Stable" and abs(diff) <= 2:
-
-                persistence += 1
+                falling += 1
 
             else:
 
-                break
+                flat += 1
 
-        # -----------------------------------------------
-        # Strength
-        # -----------------------------------------------
+        # ------------------------------------------------
+        # Context Decision
+        # ------------------------------------------------
 
-        deviation = round(
+        if rising > falling and rising >= 3:
 
-            current - average,
+            context = "Persistent Improvement"
 
-            2
+        elif falling > rising and falling >= 3:
+
+            context = "Persistent Weakening"
+
+        elif flat >= max(rising, falling):
+
+            context = "Stable"
+
+        else:
+
+            context = "Mixed"
+
+        # ------------------------------------------------
+        # Persistence
+        # ------------------------------------------------
+
+        persistence = 1
+
+        if immediate == "Improving":
+
+            for i in range(len(window) - 1, 0, -1):
+
+                if (window[i] - window[i - 1]) >= 2:
+
+                    persistence += 1
+
+                else:
+
+                    break
+
+        elif immediate == "Weakening":
+
+            for i in range(len(window) - 1, 0, -1):
+
+                if (window[i] - window[i - 1]) <= -2:
+
+                    persistence += 1
+
+                else:
+
+                    break
+
+        else:
+
+            for i in range(len(window) - 1, 0, -1):
+
+                if abs(window[i] - window[i - 1]) < 2:
+
+                    persistence += 1
+
+                else:
+
+                    break
+
+        # ------------------------------------------------
+        # Velocity
+        # ------------------------------------------------
+
+        total_change = 0
+
+        for i in range(1, len(window)):
+
+            total_change += abs(window[i] - window[i - 1])
+
+        avg_change = total_change / (len(window) - 1)
+
+        if avg_change < 2:
+
+            velocity = "Slow"
+
+        elif avg_change < 5:
+
+            velocity = "Moderate"
+
+        else:
+
+            velocity = "Fast"
+
+        # ------------------------------------------------
+        # Message
+        # ------------------------------------------------
+
+        message = (
+
+            f"{immediate} | "
+
+            f"{context} | "
+
+            f"Velocity : {velocity}"
 
         )
 
-        if abs(deviation) >= 15:
-
-            strength = "Strong"
-
-        elif abs(deviation) >= 7:
-
-            strength = "Moderate"
-
-        else:
-
-            strength = "Weak"
-
-        # -----------------------------------------------
-        # Human readable explanation
-        # -----------------------------------------------
-
-        if direction == "Rising":
-
-            message = (
-
-                "Confidence has been improving "
-
-                f"for {persistence} observations."
-
-            )
-
-        elif direction == "Falling":
-
-            message = (
-
-                "Confidence has been weakening "
-
-                f"for {persistence} observations."
-
-            )
-
-        else:
-
-            message = (
-
-                "Confidence has remained stable."
-
-            )
-
-        # -----------------------------------------------
+        # ------------------------------------------------
 
         return {
 
             "current": current,
 
+            "previous": previous,
+
             "average": average,
 
-            "change": change,
+            "change": round(change, 2),
 
-            "direction": direction,
+            "immediate": immediate,
 
-            "strength": strength,
+            "context": context,
 
             "persistence": persistence,
+
+            "velocity": velocity,
 
             "message": message
 
