@@ -50,7 +50,7 @@ class ExplanationEngine:
 
         explanation.append(
 
-            f"Trend : {ema['decision']['signal']} "
+            f"Trend : {ema['decision']['reason']} "
             f"(Score {ema['decision']['score']})"
 
         )
@@ -61,7 +61,7 @@ class ExplanationEngine:
 
         explanation.append(
 
-            f"Momentum : {macd['decision']['signal']} "
+            f"Momentum : {macd['decision']['reason']} "
             f"(Score {macd['decision']['score']})"
 
         )
@@ -72,7 +72,7 @@ class ExplanationEngine:
 
         explanation.append(
 
-            f"Risk : {rsi['decision']['signal']} "
+            f"Risk : {rsi['decision']['reason']} "
             f"(Score {rsi['decision']['score']})"
 
         )
