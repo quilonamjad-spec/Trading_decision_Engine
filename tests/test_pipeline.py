@@ -72,6 +72,8 @@ df = yf.download(
 
 print(f"✓ Loaded {len(df)} candles")
 
+print(df.columns)
+
 # -------------------------------------------------------
 # Expert Engines
 # -------------------------------------------------------
