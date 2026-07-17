@@ -65,7 +65,7 @@ print("\nDownloading Market Data...")
 
 df = yf.download(
     SYMBOL,
-    period="3mo",
+    period="40d",
     interval="5m",
     progress=False
 )
