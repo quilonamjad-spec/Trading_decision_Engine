@@ -61,17 +61,21 @@ print("=" * 70)
 # Download Data
 # -------------------------------------------------------
 
-print("\nDownloading Market Data...")
-
 df = yf.download(
     SYMBOL,
-    period="40d",
+    period="60d",
     interval="5m",
     progress=False
 )
 
-print(f"✓ Loaded {len(df)} candles")
+# Flatten MultiIndex columns
+if hasattr(df.columns, "nlevels") and df.columns.nlevels > 1:
+    df.columns = df.columns.get_level_values(0)
 
+if df.empty:
+    raise RuntimeError(f"No market data received for {SYMBOL}")
+
+print(f"✓ Loaded {len(df)} candles")
 print(df.columns)
 
 # -------------------------------------------------------
