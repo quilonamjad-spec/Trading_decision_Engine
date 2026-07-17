@@ -103,20 +103,20 @@ class ConsensusEngine:
         # Result
         # ---------------------------------------------
 
-       return {
+        return {
 
-            "agreement": agreement,
-        
-            "confidence_score": confidence_total,
-        
-            "consensus": round(multiplier * 100),
-        
-            "multiplier": multiplier,
-        
-            "reason":
-        
-                f"{agreement} consensus | "
-        
-                f"Confidence {confidence_total}/9"
-        
-        }
+                "agreement": agreement,
+            
+                "confidence_score": confidence_total,
+            
+                "consensus": round(multiplier * 100),
+            
+                "multiplier": multiplier,
+            
+                "reason":
+            
+                    f"{agreement} consensus | "
+            
+                    f"Confidence {confidence_total}/9"
+            
+            }
