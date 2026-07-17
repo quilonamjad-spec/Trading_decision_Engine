@@ -54,11 +54,19 @@ def run_test(test_name, scores):
     print("Scores : ", scores)
     print()
 
+    print("Previous     :", result["previous"])
     print("Current      :", result["current"])
     print("Average      :", result["average"])
-    print("Direction    :", result["direction"])
-    print("Strength     :", result["strength"])
+    
+    print()
+    
+    print("Immediate    :", result["immediate"])
+    print("Context      :", result["context"])
     print("Persistence  :", result["persistence"])
+    print("Velocity     :", result["velocity"])
+    
+    print()
+    
     print("Change       :", result["change"])
     print("Message      :", result["message"])
 
