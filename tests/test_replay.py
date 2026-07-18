@@ -36,7 +36,7 @@ print("\nDownloading market data...")
 
 df = yf.download(
 
-    symbol=SYMBOL,
+    SYMBOL,
 
     period=PERIOD,
 
@@ -67,17 +67,10 @@ replay = ReplayEngine(
 # -------------------------------------------------
 
 timeline = replay.run(
-
-    symbol,
-
-    df,
-
-    replay_date="2026-07-17",
-
-    start_time="09:30",
-
-    end_time="15:30"
-
+    symbol=SYMBOL,
+    df=df,
+    start_time=REPLAY_START,
+    end_time=REPLAY_END
 )
 
 # -------------------------------------------------
