@@ -99,7 +99,10 @@ class DashboardEngine:
             # ------------------------------------
             # Decision Memory
             # ------------------------------------
-            
+            print("=" * 60)
+            print("TRADE OBJECT")
+            print(trade)
+            print("=" * 60)
             memory.record(
             
                 symbol=ticker,
