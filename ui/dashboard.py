@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 
@@ -23,172 +24,108 @@ class CommandCenter:
     def render(self, dashboard):
 
         st.title("Trade Decision Engine")
-    
+
         st.caption("AI Powered Trading Decision Support System")
-    
+
         st.divider()
-    
+
         # -----------------------------------
-        # Morning Briefing
+        # Market Overview
         # -----------------------------------
-    
+
         self.morning_briefing(dashboard)
-    
+
         st.divider()
-    
+
         # -----------------------------------
         # Top Opportunities
         # -----------------------------------
-    
-        self.top_opportunities(dashboard)
-    
+
+        self.today_focus(dashboard)
+
         st.divider()
-    
+
+        self.keep_an_eye_on(dashboard)
+
+        st.divider()
+
         # -----------------------------------
         # Ranked Opportunities
         # -----------------------------------
-    
+
         self.stock_table(dashboard)
-    
+
         # -----------------------------------
         # Decision Dialog
         # -----------------------------------
-    
+
         if "selected_stock" in st.session_state:
-    
+
             self.show_decision_dialog()
-       # ==========================================================
-        # Morning Briefing
-        # ==========================================================
-        
+    # ==========================================================
+    # Market Overview
+    # ==========================================================
+
     def morning_briefing(self, dashboard):
-    
+
         st.subheader("🌅 Good Morning")
-    
-        bias = dashboard["market_bias"]
-        score = dashboard["market_score"]
-    
+
+        bias = dashboard.get("market_bias","MIXED")
+        confidence = dashboard.get("market_score",0)
+
         if bias == "BUY":
-            st.success(f"🟢 BUY DAY   |   Confidence {score}/100")
-    
+            st.success(f"🟢 BUY DAY | Confidence : {confidence}/100")
         elif bias == "SELL":
-            st.error(f"🔴 SELL DAY   |   Confidence {score}/100")
-    
+            st.error(f"🔴 SELL DAY | Confidence : {confidence}/100")
         else:
-            st.warning(f"🟡 MIXED DAY   |   Confidence {score}/100")
+            st.warning(f"🟡 MIXED DAY | Confidence : {confidence}/100")
 
-        # ======================================================
-        # Market Score
-        # ======================================================
+        st.caption("Today's Focus contains the highest conviction opportunities. Keep an Eye On contains secondary opportunities.")
 
-        with score_col:
+    # ==========================================================
+    # Today's Focus
+    # ==========================================================
 
-            with st.container(border=True):
+    def today_focus(self, dashboard):
 
-                st.subheader("📈 Market Score")
+        st.subheader("🎯 Today's Focus")
 
-                score = dashboard["market_score"]
+        top5 = dashboard["stocks"][:5]
+        cols = st.columns(5)
 
-                if score >= 90:
-                    health = "🟢 Excellent"
+        for col, stock in zip(cols, top5):
+            with col:
+                with st.container(border=True):
+                    ticker = stock["ticker"].replace(".NS","")
+                    st.markdown(f"### {ticker}")
+                    st.write(stock["status"])
+                    st.markdown(f"## {stock['score']}/100")
+                    if st.button("🔍 Analyze", key=f"focus_{ticker}"):
+                        st.session_state["selected_stock"] = stock
+                        st.rerun()
 
-                elif score >= 80:
-                    health = "🟢 Strong"
+    # ==========================================================
+    # Keep an Eye On
+    # ==========================================================
 
-                elif score >= 70:
-                    health = "🟡 Good"
+    def keep_an_eye_on(self, dashboard):
 
-                elif score >= 60:
-                    health = "🟠 Weak"
+        st.subheader("👀 Keep an Eye On")
 
-                else:
-                    health = "🔴 Poor"
+        watch = dashboard["stocks"][5:10]
+        if not watch:
+            st.info("No secondary opportunities.")
+            return
 
-                st.metric(
+        cols = st.columns(min(5,len(watch)))
 
-                    label="Overall Score",
+        for col, stock in zip(cols, watch):
+            with col:
+                with st.container(border=True):
+                    st.markdown(f"**{stock['ticker'].replace('.NS','')}**")
+                    st.caption(stock["status"])
+                    st.write(f"{stock['score']}/100")
 
-                    value=f"{score}/100"
-
-                )
-
-                st.markdown(
-                    f"""
-                    <div style='text-align:center;
-                                font-size:18px;
-                                font-weight:bold;
-                                padding-top:8px;'>
-                        {health}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-        # ======================================================
-        # Market Summary
-        # ======================================================
-
-        with summary_col:
-
-            with st.container(border=True):
-
-                st.subheader("📊 Market Summary")
-
-                summary = dashboard["summary"]
-
-                c1, c2, c3 = st.columns(3)
-
-                with c1:
-
-                    st.metric("🟢 READY", summary["READY"])
-
-                    st.metric("🔵 WAIT", summary["WAIT"])
-
-                with c2:
-
-                    st.metric("🟡 Minor", summary["READY (Minor Concerns)"])
-
-                with c3:
-
-                    st.metric("🟠 High Risk", summary["READY (High Risk)"])
-
-                    st.metric("🔴 AVOID", summary["AVOID"])
-
-        # ======================================================
-        # Market Direction
-        # ======================================================
-
-        with direction_col:
-
-            with st.container(border=True):
-
-                st.subheader("🧭 Market Direction")
-
-                direction = dashboard["direction_summary"]
-
-                st.metric(
-
-                    "📈 LONG",
-
-                    direction["LONG"]
-
-                )
-
-                st.metric(
-
-                    "📉 SHORT",
-
-                    direction["SHORT"]
-
-                )
-
-                st.metric(
-
-                    "➖ NEUTRAL",
-
-                    direction["NEUTRAL"]
-
-                )
     # ==========================================================
     # Top 5 Opportunities
     # ==========================================================
