@@ -13,6 +13,7 @@ Integration test for the complete replay pipeline.
 """
 
 import yfinance as yf
+import pandas as pd
 
 from engine.pipeline import Pipeline
 from engine.replay import ReplayEngine
