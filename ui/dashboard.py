@@ -57,24 +57,25 @@ class CommandCenter:
         if "selected_stock" in st.session_state:
     
             self.show_decision_dialog()
+       # ==========================================================
+        # Morning Briefing
         # ==========================================================
-        # Market Overview
-        # ==========================================================
-    
-        st.subheader("🌅 Good Morning")
-    
-        bias = dashboard["market_bias"]
         
-        score = dashboard["market_score"]
+        def morning_briefing(self, dashboard):
         
-        if bias == "BUY":
-            st.success(f"🟢 BUY DAY   |   Confidence {score}/100")
+            st.subheader("🌅 Good Morning")
         
-        elif bias == "SELL":
-            st.error(f"🔴 SELL DAY   |   Confidence {score}/100")
+            bias = dashboard["market_bias"]
+            score = dashboard["market_score"]
         
-        else:
-            st.warning(f"🟡 MIXED DAY   |   Confidence {score}/100")
+            if bias == "BUY":
+                st.success(f"🟢 BUY DAY   |   Confidence {score}/100")
+        
+            elif bias == "SELL":
+                st.error(f"🔴 SELL DAY   |   Confidence {score}/100")
+        
+            else:
+                st.warning(f"🟡 MIXED DAY   |   Confidence {score}/100")
 
         # ======================================================
         # Market Score
