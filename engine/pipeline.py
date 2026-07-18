@@ -121,7 +121,10 @@ class Pipeline:
         # -----------------------------
 
         self.log("Running Decision...")
-        decision = self.decision.evaluate(conviction)
+        decision = self.decision.evaluate(
+            conviction,
+            trade_quality["score"]
+        )
 
         # -----------------------------
         # Explanation
