@@ -45,6 +45,8 @@ df = yf.download(
     progress=False
 
 )
+if isinstance(df.columns, pd.MultiIndex):
+    df.columns = df.columns.get_level_values(0)
 
 if df.empty:
 
