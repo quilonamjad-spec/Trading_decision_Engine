@@ -23,47 +23,58 @@ class CommandCenter:
     def render(self, dashboard):
 
         st.title("Trade Decision Engine")
-
+    
         st.caption("AI Powered Trading Decision Support System")
-
+    
         st.divider()
-
+    
         # -----------------------------------
-        # Market Overview
+        # Morning Briefing
         # -----------------------------------
-
-        self.market_overview(dashboard)
-
+    
+        self.morning_briefing(dashboard)
+    
         st.divider()
-
+    
         # -----------------------------------
         # Top Opportunities
         # -----------------------------------
-
+    
         self.top_opportunities(dashboard)
-
+    
         st.divider()
-
+    
         # -----------------------------------
         # Ranked Opportunities
         # -----------------------------------
-
+    
         self.stock_table(dashboard)
-
+    
         # -----------------------------------
         # Decision Dialog
         # -----------------------------------
-
+    
         if "selected_stock" in st.session_state:
-
+    
             self.show_decision_dialog()
-    # ==========================================================
-    # Market Overview
-    # ==========================================================
-
-    def market_overview(self, dashboard):
-
-        score_col, summary_col, direction_col = st.columns([1, 1.3, 1])
+        # ==========================================================
+        # Market Overview
+        # ==========================================================
+    
+        st.subheader("🌅 Good Morning")
+    
+        bias = dashboard["market_bias"]
+        
+        score = dashboard["market_score"]
+        
+        if bias == "BUY":
+            st.success(f"🟢 BUY DAY   |   Confidence {score}/100")
+        
+        elif bias == "SELL":
+            st.error(f"🔴 SELL DAY   |   Confidence {score}/100")
+        
+        else:
+            st.warning(f"🟡 MIXED DAY   |   Confidence {score}/100")
 
         # ======================================================
         # Market Score
