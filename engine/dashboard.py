@@ -221,7 +221,34 @@ class DashboardEngine:
             reverse=True
 
         )
-
+        # ----------------------------------------
+        # Build Watchlists
+        # ----------------------------------------
+        
+        buy_list = [
+            stock for stock in dashboard
+            if stock["direction"] == "LONG"
+        ][:5]
+        
+        sell_list = [
+            stock for stock in dashboard
+            if stock["direction"] == "SHORT"
+        ][:5]
+        # ----------------------------------------
+        # Market Bias
+        # ----------------------------------------
+        
+        long_count = direction_summary["LONG"]
+        short_count = direction_summary["SHORT"]
+        
+        if long_count > short_count:
+            market_bias = "BUY"
+        
+        elif short_count > long_count:
+            market_bias = "SELL"
+        
+        else:
+            market_bias = "MIXED"
         # ----------------------------------------
         # Market Statistics
         # ----------------------------------------
@@ -257,6 +284,12 @@ class DashboardEngine:
 
             "confidence_summary": confidence_summary,
 
+            "market_bias": market_bias,
+
+            "primary_watchlist": buy_list,
+            
+            "secondary_watchlist": sell_list,
+            
             "stocks": dashboard
 
         }
