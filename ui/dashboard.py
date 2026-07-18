@@ -61,21 +61,21 @@ class CommandCenter:
         # Morning Briefing
         # ==========================================================
         
-        def morning_briefing(self, dashboard):
-        
-            st.subheader("🌅 Good Morning")
-        
-            bias = dashboard["market_bias"]
-            score = dashboard["market_score"]
-        
-            if bias == "BUY":
-                st.success(f"🟢 BUY DAY   |   Confidence {score}/100")
-        
-            elif bias == "SELL":
-                st.error(f"🔴 SELL DAY   |   Confidence {score}/100")
-        
-            else:
-                st.warning(f"🟡 MIXED DAY   |   Confidence {score}/100")
+    def morning_briefing(self, dashboard):
+    
+        st.subheader("🌅 Good Morning")
+    
+        bias = dashboard["market_bias"]
+        score = dashboard["market_score"]
+    
+        if bias == "BUY":
+            st.success(f"🟢 BUY DAY   |   Confidence {score}/100")
+    
+        elif bias == "SELL":
+            st.error(f"🔴 SELL DAY   |   Confidence {score}/100")
+    
+        else:
+            st.warning(f"🟡 MIXED DAY   |   Confidence {score}/100")
 
         # ======================================================
         # Market Score
