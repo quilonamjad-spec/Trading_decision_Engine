@@ -68,13 +68,15 @@ replay = ReplayEngine(
 
 timeline = replay.run(
 
-    symbol=SYMBOL,
+    symbol,
 
-    df=df,
+    df,
 
-    start_time=REPLAY_START,
+    replay_date="2026-07-17",
 
-    end_time=REPLAY_END
+    start_time="09:30",
+
+    end_time="15:30"
 
 )
 
