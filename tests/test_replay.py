@@ -51,6 +51,19 @@ if df.empty:
     raise Exception("No market data downloaded.")
 
 print(f"{len(df)} candles downloaded.")
+print(df.head())
+
+print()
+
+print(df.columns)
+
+print()
+
+print(type(df))
+
+print()
+
+print(type(df["Close"]))
 
 # -------------------------------------------------
 
