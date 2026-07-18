@@ -104,16 +104,16 @@ class DashboardEngine:
             print(trade)
             print("=" * 60)
             memory.record(
-            
+
                 symbol=ticker,
             
-                consensus=trade["consensus"]["confidence"],
+                consensus=trade["consensus"]["confidence_score"],
             
                 trade_score=trade["score"],
             
                 status=trade["status"],
             
-                reason=trade["reason"]
+                reason=", ".join(trade["evidence"])
             
             )
             
