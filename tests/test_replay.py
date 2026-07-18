@@ -36,7 +36,7 @@ print("\nDownloading market data...")
 
 df = yf.download(
 
-    SYMBOL=SYMBOL,
+    symbol=SYMBOL,
 
     period=PERIOD,
 
