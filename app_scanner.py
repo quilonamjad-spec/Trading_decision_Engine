@@ -130,6 +130,14 @@ def main():
             dashboard
         )
 
+        st.divider()
+    
+        st.subheader("Debug")
+        
+        st.write(dashboard["primary_watchlist"])
+        
+        st.write(dashboard["secondary_watchlist"])
+        
     else:
 
         draw_placeholder()
