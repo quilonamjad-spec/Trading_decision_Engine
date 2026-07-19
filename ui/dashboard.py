@@ -21,7 +21,25 @@ class CommandCenter:
     # Main Render
     # ==========================================================
 
-    def render(self, dashboard, dashboard_engine, market_engine, trade_engine, ema, macd,rsi):
+    def render(
+
+        self,
+    
+        dashboard,
+    
+        dashboard_engine,
+    
+        market_engine,
+    
+        trade_engine,
+    
+        ema,
+    
+        macd,
+    
+        rsi
+    
+    ):
 
         st.title("Trade Decision Engine")
 
