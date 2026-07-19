@@ -239,13 +239,13 @@ def draw_top_opportunities(primary_watchlist):
         draw_opportunity_card(stock)
 
      if (
+        st.session_state.selected_stock
+        and
+        st.session_state.selected_stock["ticker"] == stock["ticker"]
+    ):
+        draw_decision_summary(
             st.session_state.selected_stock
-            and
-            st.session_state.selected_stock["ticker"] == stock["ticker"]
-        ):
-            draw_decision_summary(
-                st.session_state.selected_stock
-            )
+        )
 def draw_watchlist(secondary_watchlist):
 
     st.subheader("👀 Keep an Eye On")
