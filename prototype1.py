@@ -108,4 +108,18 @@ dashboard = dashboard_engine.build(
 
 command_center = CommandCenter()
 
-command_center.render(dashboard)
+command_center.render(
+
+    dashboard=dashboard,
+
+    dashboard_engine=dashboard_engine,
+
+    market_engine=market,
+
+    trade_engine=trade_engine,
+
+    ema=ema,
+
+    macd=macd,
+
+    rsi=rsi
