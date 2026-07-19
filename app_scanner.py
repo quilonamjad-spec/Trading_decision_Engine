@@ -6,11 +6,9 @@ from engine.dashboard import DashboardEngine
 
 from engine.trade_quality import TradeQualityEngine
 
-from indicators.ema import EMA
-
-from indicators.macd import MACD
-
-from indicators.rsi import RSI
+from indicators import ema
+from indicators import macd
+from indicators import rsi
 
 market_engine = MarketDataEngine()
 
