@@ -1,5 +1,29 @@
 import streamlit as st
 
+from data.market_data import MarketDataEngine
+
+from engine.dashboard_engine import DashboardEngine
+
+from engine.trade_quality import TradeQualityEngine
+
+from indicators.ema import EMA
+
+from indicators.macd import MACD
+
+from indicators.rsi import RSI
+
+market_engine = MarketDataEngine()
+
+dashboard_engine = DashboardEngine()
+
+trade_engine = TradeQualityEngine()
+
+ema = EMA()
+
+macd = MACD()
+
+rsi = RSI()
+
 
 # ==========================================================
 # Page Configuration
@@ -80,13 +104,38 @@ def main():
 
     if scan:
 
-        st.success(f"Scanning {universe}...")
+        with st.spinner("Scanning market..."):
+
+            # -----------------------------------------
+            # Download Market Data
+            # -----------------------------------------
+
+            market_data = market_engine.download_watchlist()
+
+            # -----------------------------------------
+            # Analyse Market
+            # -----------------------------------------
+
+            dashboard = dashboard_engine.build(
+
+                market_data=market_data,
+
+                trade_engine=trade_engine,
+
+                ema=ema,
+
+                macd=macd,
+
+                rsi=rsi
+
+            )
+
+        st.success("Market Analysis Complete ✅")
+
+        st.write(f"Universe : {universe}")
+
+        st.write(f"Stocks Analysed : {len(dashboard['stocks'])}")
 
     else:
 
         draw_placeholder()
-
-
-if __name__ == "__main__":
-
-    main()
