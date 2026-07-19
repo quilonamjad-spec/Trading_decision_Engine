@@ -123,3 +123,4 @@ command_center.render(
     macd=macd,
 
     rsi=rsi
+)
