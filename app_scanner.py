@@ -130,7 +130,7 @@ def main():
 
             )
 
-            st.session_state.dashboard = dashboard
+    st.session_state.dashboard = dashboard
     if st.session_state.dashboard:
 
         st.success("Market Analysis Complete ✅")
