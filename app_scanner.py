@@ -137,48 +137,48 @@ def main():
     # ==========================================================
     # Market Summary
     # ==========================================================
-    
-    def draw_market_summary(universe, dashboard):
-    
-        st.divider()
-    
-        st.subheader("📊 Market Summary")
-    
-        col1, col2, col3, col4 = st.columns(4)
-    
-        with col1:
-    
+
+def draw_market_summary(universe, dashboard):
+
+    st.divider()
+
+    st.subheader("📊 Market Summary")
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+
+        st.metric(
+            "Market Bias",
+            dashboard["market_bias"]
+        )
+
+    with col2:
+
+        st.metric(
+            "Market Score",
+            f"{dashboard['market_score']}/100"
+        )
+
+    with col3:
+
+        st.metric(
+            "Stocks Analysed",
+            len(dashboard["stocks"])
+        )
+
+    with col4:
+
+        best = dashboard["best_trade"]
+
+        if best:
+
             st.metric(
-                "Market Bias",
-                dashboard["market_bias"]
+                "Best Trade",
+                best["ticker"].replace(".NS", "")
             )
-    
-        with col2:
-    
-            st.metric(
-                "Market Score",
-                f"{dashboard['market_score']}/100"
-            )
-    
-        with col3:
-    
-            st.metric(
-                "Stocks Analysed",
-                len(dashboard["stocks"])
-            )
-    
-        with col4:
-    
-            best = dashboard["best_trade"]
-    
-            if best:
-    
-                st.metric(
-                    "Best Trade",
-                    best["ticker"].replace(".NS", "")
-                )
-    
-        st.caption(f"Universe : {universe}")
+
+    st.caption(f"Universe : {universe}")
 
     # ==========================================================
     # Application Entry Point
