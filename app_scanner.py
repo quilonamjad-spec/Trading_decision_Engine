@@ -6,6 +6,8 @@ from engine.dashboard import DashboardEngine
 
 from engine.trade_quality import TradeQualityEngine
 
+from ui.decision_summary import draw_decision_summary
+
 from indicators import ema
 from indicators import macd
 from indicators import rsi
@@ -95,6 +97,9 @@ def main():
 
     universe, scan = draw_controls()
 
+    if "selected_stock" not in st.session_state:
+    st.session_state.selected_stock = None
+    
     if scan:
 
         with st.spinner("Scanning market..."):
@@ -216,9 +221,12 @@ def draw_opportunity_card(stock):
                 f"{stock['score']}/100"
             )
 
-        st.button(
-            "🔍 Analyze",
-            key=f"analyze_{stock['ticker']}"
+        if st.button(
+            "📊 View Analysis",
+            key=f"analysis_{stock['ticker']}"
+        ):
+            st.session_state.selected_stock = stock
+            st.rerun()
         )
 
 def draw_top_opportunities(primary_watchlist):
@@ -227,6 +235,15 @@ def draw_top_opportunities(primary_watchlist):
 
     for stock in primary_watchlist:
         draw_opportunity_card(stock)
+
+    if (
+        st.session_state.selected_stock
+        and
+        st.session_state.selected_stock["ticker"] == stock["ticker"]
+    ):
+        draw_decision_summary(
+            st.session_state.selected_stock
+        )
 
 def draw_watchlist(secondary_watchlist):
 
