@@ -227,7 +227,7 @@ def draw_opportunity_card(stock):
         ):
             st.session_state.selected_stock = stock
             st.rerun()
-        )
+        
 
 def draw_top_opportunities(primary_watchlist):
 
