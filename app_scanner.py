@@ -129,7 +129,8 @@ def main():
                 rsi=rsi
 
             )
-           
+
+            st.session_state.dashboard = dashboard
     if st.session_state.dashboard:
 
         st.success("Market Analysis Complete ✅")
