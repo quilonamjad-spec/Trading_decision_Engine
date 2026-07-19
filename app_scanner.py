@@ -18,11 +18,6 @@ dashboard = DashboardEngine()
 
 trade_engine = TradeQualityEngine()
 
-ema = EMA()
-
-macd = MACD()
-
-rsi = RSI()
 
 
 # ==========================================================
