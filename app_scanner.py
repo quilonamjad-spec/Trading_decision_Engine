@@ -12,7 +12,7 @@ from indicators import rsi
 
 market_engine = MarketDataEngine()
 
-dashboard = DashboardEngine()
+dashboard_engine = DashboardEngine()
 
 trade_engine = TradeQualityEngine()
 
