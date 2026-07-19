@@ -43,31 +43,31 @@ class CommandCenter:
 
         st.title("Trade Decision Engine")
 
-                # -----------------------------------
-                # Engine References
-                # -----------------------------------
+            # -----------------------------------
+            # Engine References
+            # -----------------------------------
 
-                self.dashboard = dashboard
+            self.dashboard = dashboard
 
-                self.dashboard_engine = dashboard_engine
+            self.dashboard_engine = dashboard_engine
 
-                self.market_engine = market_engine
+            self.market_engine = market_engine
 
-                self.trade_engine = trade_engine
+            self.trade_engine = trade_engine
 
-                self.ema = ema
+            self.ema = ema
 
-                self.macd = macd
+            self.macd = macd
 
-                self.rsi = rsi
+            self.rsi = rsi
 
-                if "idea_result" not in st.session_state:
+            if "idea_result" not in st.session_state:
 
-                    st.session_state.idea_result = None
+                st.session_state.idea_result = None
 
-                if "idea_ticker" not in st.session_state:
+            if "idea_ticker" not in st.session_state:
 
-                    st.session_state.idea_ticker = ""
+                st.session_state.idea_ticker = ""
 
         st.caption("AI Powered Trading Decision Support System")
 
