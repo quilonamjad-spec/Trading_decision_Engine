@@ -96,3 +96,40 @@ class MarketDataEngine:
         print("\nDownload Complete.")
 
         return market_data
+        
+        # =====================================================
+        # Download Single Stock
+        # =====================================================
+
+        def download_stock(self, ticker):
+
+            if not ticker.endswith(".NS"):
+                ticker = ticker.upper() + ".NS"
+
+            try:
+
+                df = yf.download(
+
+                    ticker,
+
+                    period=self.period,
+
+                    interval=self.interval,
+
+                    progress=False,
+
+                    auto_adjust=True
+
+                )
+
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+
+                if df.empty:
+                    return None
+
+                return df
+
+            except Exception:
+
+                return None
