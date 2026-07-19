@@ -2,7 +2,7 @@ import streamlit as st
 
 from data.market_data import MarketDataEngine
 
-from engine.dashboard_engine import DashboardEngine
+from engine.dashboard import DashboardEngine
 
 from engine.trade_quality import TradeQualityEngine
 
@@ -14,7 +14,7 @@ from indicators.rsi import RSI
 
 market_engine = MarketDataEngine()
 
-dashboard_engine = DashboardEngine()
+dashboard = DashboardEngine()
 
 trade_engine = TradeQualityEngine()
 
