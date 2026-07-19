@@ -48,7 +48,7 @@ class StockCard:
 
                 st.button(
                     "★",
-                    key=f"watch_{ticker}",
+                    key=f"card_watch_{ticker}",
                     use_container_width=True
                 )
 
