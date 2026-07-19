@@ -145,19 +145,7 @@ def draw_market_summary(universe, dashboard):
     st.divider()
 
     st.subheader("📊 Market Summary")
-
-    st.divider()
-
-    draw_top_opportunities(
-        dashboard["primary_watchlist"]
-    )
-
-    st.divider()
-
-    draw_watchlist(
-        dashboard["secondary_watchlist"]
-    )
-
+  
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
@@ -193,6 +181,19 @@ def draw_market_summary(universe, dashboard):
             )
 
     st.caption(f"Universe : {universe}")
+
+    st.divider()
+
+    draw_top_opportunities(
+        dashboard["primary_watchlist"]
+    )
+
+    st.divider()
+
+    draw_watchlist(
+        dashboard["secondary_watchlist"]
+    )
+    
 
 def draw_opportunity_card(stock):
 
