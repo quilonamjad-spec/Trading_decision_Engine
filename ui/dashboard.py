@@ -45,6 +45,10 @@ class CommandCenter:
 
         st.divider()
 
+        self.my_watch()
+
+        st.divider()
+
         self.keep_an_eye_on(dashboard)
 
         st.divider()
@@ -100,10 +104,90 @@ class CommandCenter:
                     st.markdown(f"### {ticker}")
                     st.write(stock["status"])
                     st.markdown(f"## {stock['score']}/100")
-                    if st.button("🔍 Analyze", key=f"focus_{ticker}"):
-                        st.session_state["selected_stock"] = stock
-                        st.rerun()
+                    col1, col2 = st.columns(2)
 
+                    with col1:
+                        if st.button("🔍 Analyze", key=f"focus_{ticker}"):
+
+                            st.session_state["selected_stock"] = stock
+                            st.rerun()
+
+                    with col2:
+                        if st.button("⭐ Watch", key=f"watch_{ticker}"):
+
+                            already_exists = any(
+                                s["ticker"] == stock["ticker"]
+                                for s in st.session_state.watch_list
+                            )
+
+                            if not already_exists:
+                                st.session_state.watch_list.append(stock)
+
+                            st.rerun()
+    # ==========================================================
+    # My Watch
+    # ==========================================================
+
+    def my_watch(self):
+
+        st.subheader("⭐ My Watch")
+
+        watch = st.session_state.watch_list
+
+        if len(watch) == 0:
+
+            st.info("No stocks added.")
+
+            return
+
+        cols = st.columns(min(5, len(watch)))
+
+        for col, stock in zip(cols, watch):
+
+            with col:
+
+                with st.container(border=True):
+
+                    ticker = stock["ticker"].replace(".NS", "")
+
+                    st.markdown(f"### {ticker}")
+
+                    st.write(stock["status"])
+
+                    st.markdown(f"## {stock['score']}/100")
+
+                    c1, c2 = st.columns(2)
+
+                    with c1:
+
+                        if st.button(
+                            "🔍 Analyze",
+                            key=f"watch_analyze_{ticker}"
+                        ):
+
+                            st.session_state["selected_stock"] = stock
+
+                            st.rerun()
+
+                    with c2:
+
+                        if st.button(
+                            "❌ Remove",
+                            key=f"remove_{ticker}"
+                        ):
+
+                            st.session_state.watch_list = [
+
+                                s
+
+                                for s in st.session_state.watch_list
+
+                                if s["ticker"] != stock["ticker"]
+
+                            ]
+
+                            st.rerun()
+                            
     # ==========================================================
     # Keep an Eye On
     # ==========================================================
