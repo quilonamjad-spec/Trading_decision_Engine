@@ -90,6 +90,8 @@ def draw_placeholder():
 # ==========================================================
 # Main
 # ==========================================================
+if "selected_stock" not in st.session_state:
+    st.session_state.selected_stock = None
 
 def main():
 
@@ -97,9 +99,7 @@ def main():
 
     universe, scan = draw_controls()
 
-    if "selected_stock" not in st.session_state:
-    st.session_state.selected_stock = None
-    
+ 
     if scan:
 
         with st.spinner("Scanning market..."):
