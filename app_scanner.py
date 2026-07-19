@@ -92,6 +92,8 @@ def draw_placeholder():
 # ==========================================================
 if "selected_stock" not in st.session_state:
     st.session_state.selected_stock = None
+if "dashboard" not in st.session_state:
+    st.session_state.dashboard = None
 
 def main():
 
@@ -127,18 +129,18 @@ def main():
                 rsi=rsi
 
             )
+           
+    if st.session_state.dashboard:
 
         st.success("Market Analysis Complete ✅")
-
+    
         draw_market_summary(
             universe,
-            dashboard
+            st.session_state.dashboard
         )
-
-       
-        
+    
     else:
-
+    
         draw_placeholder()
 
     # ==========================================================
@@ -236,15 +238,14 @@ def draw_top_opportunities(primary_watchlist):
     for stock in primary_watchlist:
         draw_opportunity_card(stock)
 
-    if (
-        st.session_state.selected_stock
-        and
-        st.session_state.selected_stock["ticker"] == stock["ticker"]
-    ):
-        draw_decision_summary(
+     if (
             st.session_state.selected_stock
-        )
-
+            and
+            st.session_state.selected_stock["ticker"] == stock["ticker"]
+        ):
+            draw_decision_summary(
+                st.session_state.selected_stock
+            )
 def draw_watchlist(secondary_watchlist):
 
     st.subheader("👀 Keep an Eye On")
