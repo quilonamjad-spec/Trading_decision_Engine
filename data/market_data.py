@@ -69,13 +69,25 @@ class MarketDataEngine:
      # ---------------------------------------------------    
 
     def get_data_until(self, ticker, end_datetime):
-    
+
         df = self.get_data(ticker)
     
         df = df[df.index <= end_datetime]
     
+        if df.empty:
+            raise ValueError(
+                f"No market data available for {ticker} before {end_datetime}"
+            )
+    
         return df
 
+    print(df.index.min())
+    print(df.index.max())
+    print(end_datetime)
+    
+    df = df[df.index <= end_datetime]
+    
+    print("Rows after filter:", len(df))
      # ---------------------------------------------------    
 
     def get_data_until(self, ticker, end_datetime):
