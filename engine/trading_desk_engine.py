@@ -1,31 +1,24 @@
+from datetime import datetime
+
+from engine.market_data import MarketDataEngine
+from engine.trade_quality import TradeQualityEngine
+
+
 class TradingDeskEngine:
 
-    def build(self):
+    def __init__(self):
+        self.market = MarketDataEngine()
+        self.trade_quality = TradeQualityEngine()
 
-        return {
+    def analyze(self, ticker, analysis_datetime):
 
-            "ticker": "HEROMOTOCO",
+        # Load market data up to requested time
+        df = self.market.get_data_until(
+            ticker=ticker,
+            end_datetime=analysis_datetime
+        )
 
-            "score": 96,
+        # Calculate Trade Quality
+        result = self.trade_quality.evaluate(df)
 
-            "last_update": "09:30",
-
-            "confidence": [94,95,94,96,96],
-
-            "consensus": [90,91,92,91,90],
-
-            "reasons": [
-
-                "Momentum slowing",
-
-                "Volume reduced",
-
-                "EMA trend intact"
-
-            ],
-
-            "recommendation": "🟡 HOLD",
-
-            "message": "No exit signal yet."
-
-        }
+        return result
