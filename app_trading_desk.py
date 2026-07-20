@@ -12,8 +12,16 @@ st.set_page_config(
 
 st.title("Trading Desk")
 
+from datetime import datetime
+
 engine = TradingDeskEngine()
 
-data = engine.build()
+ticker = "SBIN"      # Temporary
+analysis_datetime = datetime.now()   # Temporary
+
+data = engine.analyze(
+    ticker,
+    analysis_datetime
+)
 
 draw_trading_desk(data)
