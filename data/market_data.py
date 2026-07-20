@@ -81,13 +81,13 @@ class MarketDataEngine:
     
         return df
 
-    print(df.index.min())
-    print(df.index.max())
-    print(end_datetime)
-    
-    df = df[df.index <= end_datetime]
-    
-    print("Rows after filter:", len(df))
+        print(df.index.min())
+        print(df.index.max())
+        print(end_datetime)
+        
+        df = df[df.index <= end_datetime]
+        
+        print("Rows after filter:", len(df))
      # ---------------------------------------------------    
 
     def get_data_until(self, ticker, end_datetime):
