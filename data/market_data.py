@@ -42,6 +42,40 @@ class MarketDataEngine:
 
         self.interval = config.INTERVAL
 
+     # -----------------------------------------------------
+
+    def get_data(self, ticker):
+    
+        df = yf.download(
+    
+            ticker,
+    
+            period=self.period,
+    
+            interval=self.interval,
+    
+            progress=False,
+    
+            auto_adjust=True
+    
+        )
+    
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+    
+        return df
+
+     
+     # ---------------------------------------------------    
+
+    def get_data_until(self, ticker, end_datetime):
+    
+        df = self.get_data(ticker)
+    
+        df = df[df.index <= end_datetime]
+    
+        return df
+
      # ---------------------------------------------------    
 
     def get_data_until(self, ticker, end_datetime):
