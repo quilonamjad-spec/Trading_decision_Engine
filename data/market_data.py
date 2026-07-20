@@ -74,7 +74,7 @@ class MarketDataEngine:
 
 
         # Make analysis time timezone-aware
-      
+        import pandas as pd    
 
         end_datetime = pd.Timestamp(end_datetime)
         
