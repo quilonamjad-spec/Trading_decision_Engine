@@ -42,6 +42,21 @@ class MarketDataEngine:
 
         self.interval = config.INTERVAL
 
+     # ---------------------------------------------------    
+
+    def get_data_until(self, ticker, end_datetime):
+    
+        """
+        Returns OHLCV data only up to the requested
+        date and time.
+        """
+    
+        df = self.get_data(ticker)
+    
+        df = df[df.index <= end_datetime]
+    
+        return df
+    
     # -----------------------------------------------------
     # Internal Downloader
     # -----------------------------------------------------
