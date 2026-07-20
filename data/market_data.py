@@ -83,7 +83,7 @@ class MarketDataEngine:
             else:
                 end_datetime = end_datetime.tz_convert("Asia/Kolkata")
         
-        df = df[df.index <= end_datetime]
+            df = df[df.index <= end_datetime]
     
         if df.empty:
             raise ValueError(
