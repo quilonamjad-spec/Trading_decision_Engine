@@ -37,6 +37,8 @@ class TradingDeskEngine:
         print(type(df))
         print("--------------------------------")
         print(df.shape)
+        print("--------------------------------")
+        print(df.index)
 
         # -----------------------------------------
         # Run Expert Engines
