@@ -78,12 +78,12 @@ class MarketDataEngine:
 
         end_datetime = pd.Timestamp(end_datetime)
         
-            if end_datetime.tzinfo is None:
-                end_datetime = end_datetime.tz_localize("Asia/Kolkata")
-            else:
-                end_datetime = end_datetime.tz_convert("Asia/Kolkata")
-        
-            df = df[df.index <= end_datetime]
+        if end_datetime.tzinfo is None:
+            end_datetime = end_datetime.tz_localize("Asia/Kolkata")
+        else:
+            end_datetime = end_datetime.tz_convert("Asia/Kolkata")
+    
+        df = df[df.index <= end_datetime]
     
         if df.empty:
             raise ValueError(
