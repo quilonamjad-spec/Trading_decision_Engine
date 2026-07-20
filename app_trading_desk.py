@@ -16,7 +16,7 @@ from datetime import datetime
 
 engine = TradingDeskEngine()
 
-ticker = "SBIN.NS"      # Temporary
+ticker = "TCS.NS"      # Temporary
 analysis_datetime = datetime.now()   # Temporary
 
 data = engine.analyze(
