@@ -29,6 +29,15 @@ class TradingDeskEngine:
             end_datetime=analysis_datetime
         )
 
+        print("--------------------------------")
+        print(df.head())
+        print("--------------------------------")
+        print(df.columns)
+        print("--------------------------------")
+        print(type(df))
+        print("--------------------------------")
+        print(df.shape)
+
         # -----------------------------------------
         # Run Expert Engines
         # -----------------------------------------
