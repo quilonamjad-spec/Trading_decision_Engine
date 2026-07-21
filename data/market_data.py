@@ -67,9 +67,8 @@ class MarketDataEngine:
 
      
      # ---------------------------------------------------    
-
-   def get_data_until(self, ticker, end_datetime):
-
+    def get_data_until(self, ticker, end_datetime):
+    
         import pandas as pd
     
         df = self.get_data(ticker)
@@ -94,6 +93,9 @@ class MarketDataEngine:
         df = df[df.index <= ts]
     
         return df
+
+
+
      # ---------------------------------------------------    
 
  
