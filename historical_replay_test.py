@@ -4,9 +4,13 @@ from engine import ema
 from engine import macd
 from engine import rsi
 from engine import trade_quality
+from engine.trade_quality import TradeQualityEngine
+
+
 
 
 market = MarketDataEngine()
+trade_engine = TradeQualityEngine()
 
 
 def analyze_snapshot(ticker, analysis_time):
@@ -19,11 +23,11 @@ def analyze_snapshot(ticker, analysis_time):
     macd_result = macd.calculate(df)
     rsi_result = rsi.calculate(df)
 
-    result = trade_quality.evaluate(
-        ema_result,
-        macd_result,
-        rsi_result
-    )
+    result = trade_engine.evaluate(
+    ema_result,
+    macd_result,
+    rsi_result
+    )    
 
     return result
 
