@@ -70,30 +70,30 @@ class MarketDataEngine:
 
    def get_data_until(self, ticker, end_datetime):
 
-    import pandas as pd
-
-    df = self.get_data(ticker)
-
-    print("\n========== DEBUG ==========")
-    print("Index dtype :", df.index.dtype)
-    print("Index tz    :", df.index.tz)
-    print("Input type  :", type(end_datetime))
-    print("Input value :", end_datetime)
-
-    ts = pd.Timestamp(end_datetime)
-
-    print("Timestamp   :", ts)
-    print("Timestamp tz:", ts.tz)
-
-    if df.index.tz is not None:
-        ts = ts.tz_localize(df.index.tz)
-
-    print("After localize:", ts)
-    print("===========================\n")
-
-    df = df[df.index <= ts]
-
-    return df
+        import pandas as pd
+    
+        df = self.get_data(ticker)
+    
+        print("\n========== DEBUG ==========")
+        print("Index dtype :", df.index.dtype)
+        print("Index tz    :", df.index.tz)
+        print("Input type  :", type(end_datetime))
+        print("Input value :", end_datetime)
+    
+        ts = pd.Timestamp(end_datetime)
+    
+        print("Timestamp   :", ts)
+        print("Timestamp tz:", ts.tz)
+    
+        if df.index.tz is not None:
+            ts = ts.tz_localize(df.index.tz)
+    
+        print("After localize:", ts)
+        print("===========================\n")
+    
+        df = df[df.index <= ts]
+    
+        return df
      # ---------------------------------------------------    
 
  
