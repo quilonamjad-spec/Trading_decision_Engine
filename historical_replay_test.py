@@ -11,7 +11,7 @@ def analyze_snapshot(ticker, analysis_time):
     Runs the complete engine up to the given time.
     """
 
-    df = market_data.get_data_until(ticker, analysis_time)
+    df = data.market_data.get_data_until(ticker, analysis_time)
 
     ema_result = ema.calculate(df)
     macd_result = macd.calculate(df)
