@@ -68,48 +68,35 @@ class MarketDataEngine:
      
      # ---------------------------------------------------    
 
+   def get_data_until(self, ticker, end_datetime):
+
     import pandas as pd
 
-    def get_data_until(self, ticker, end_datetime):
-    
-        df = self.get_data(ticker)
-    
-        # Convert the user's datetime to the same timezone as the dataframe
-        end_datetime = pd.Timestamp(end_datetime)
-    
-        if df.index.tz is not None:
-            end_datetime = end_datetime.tz_localize(df.index.tz)
-    
-        df = df[df.index <= end_datetime]
-    
-        if df.empty:
-            raise ValueError(
-                f"No market data available for {ticker} before {end_datetime}"
-            )
-    
-        return df
+    df = self.get_data(ticker)
 
-        print(df.index.min())
-        print(df.index.max())
-        print(end_datetime)
-        
-        df = df[df.index <= end_datetime]
-        
-        print("Rows after filter:", len(df))
+    print("\n========== DEBUG ==========")
+    print("Index dtype :", df.index.dtype)
+    print("Index tz    :", df.index.tz)
+    print("Input type  :", type(end_datetime))
+    print("Input value :", end_datetime)
+
+    ts = pd.Timestamp(end_datetime)
+
+    print("Timestamp   :", ts)
+    print("Timestamp tz:", ts.tz)
+
+    if df.index.tz is not None:
+        ts = ts.tz_localize(df.index.tz)
+
+    print("After localize:", ts)
+    print("===========================\n")
+
+    df = df[df.index <= ts]
+
+    return df
      # ---------------------------------------------------    
 
-    def get_data_until(self, ticker, end_datetime):
-    
-        """
-        Returns OHLCV data only up to the requested
-        date and time.
-        """
-    
-        df = self.get_data(ticker)
-    
-        df = df[df.index <= end_datetime]
-    
-        return df
+ 
     
     # -----------------------------------------------------
     # Internal Downloader
