@@ -68,35 +68,19 @@ class MarketDataEngine:
      
      # ---------------------------------------------------    
 
+    import pandas as pd
+
     def get_data_until(self, ticker, end_datetime):
-
-        df = self.get_data(ticker)
-
-
-        # Make analysis time timezone-aware
-        print("========== DEBUG ==========")
-        print("Index dtype :", df.index.dtype)
-        print("Index tz    :", df.index.tz)
-        
-        print("end_datetime:", end_datetime)
-        print("Type        :", type(end_datetime))
-        import pandas as pd    
-       
-        ts = pd.Timestamp(end_datetime)
-        
-        print("Timestamp   :", ts)
-        print("Timestamp tz:", ts.tzinfo)
-        
-        print("===========================")
-
-        end_datetime = pd.Timestamp(end_datetime)
-        
-        if end_datetime.tzinfo is None:
-            end_datetime = end_datetime.tz_localize("Asia/Kolkata")
-        else:
-            end_datetime = end_datetime.tz_convert("Asia/Kolkata")
     
-       # df = df[df.index <= end_datetime]
+        df = self.get_data(ticker)
+    
+        # Convert the user's datetime to the same timezone as the dataframe
+        end_datetime = pd.Timestamp(end_datetime)
+    
+        if df.index.tz is not None:
+            end_datetime = end_datetime.tz_localize(df.index.tz)
+    
+        df = df[df.index <= end_datetime]
     
         if df.empty:
             raise ValueError(
