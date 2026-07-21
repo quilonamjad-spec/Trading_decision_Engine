@@ -5,12 +5,6 @@ import macd
 import rsi
 import trade_quality
 
-def get_data_until(ticker, analysis_time):
-    df = get_data(ticker)
-
-    df = df[df.index <= analysis_time]
-
-    return df
 
 def analyze_snapshot(ticker, analysis_time):
     """
