@@ -1,9 +1,9 @@
 from datetime import datetime
-import market_data
-import ema
-import macd
-import rsi
-import trade_quality
+from data import market_data
+from engine import ema
+from engine import macd
+from engine import rsi
+from engine import trade_quality
 
 
 def analyze_snapshot(ticker, analysis_time):
@@ -11,7 +11,7 @@ def analyze_snapshot(ticker, analysis_time):
     Runs the complete engine up to the given time.
     """
 
-    df = data.market_data.get_data_until(ticker, analysis_time)
+    df = market_data.get_data_until(ticker, analysis_time)
 
     ema_result = ema.calculate(df)
     macd_result = macd.calculate(df)
