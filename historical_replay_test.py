@@ -1,5 +1,5 @@
 from datetime import datetime
-from data import market_data
+from data.market_data import MarketDataEngine
 from engine import ema
 from engine import macd
 from engine import rsi
