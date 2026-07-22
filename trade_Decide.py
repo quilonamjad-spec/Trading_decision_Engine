@@ -1,4 +1,57 @@
-import streamlit as st
+"""
+====================================================
+Trade Decision Engine
+Analysis Engine
+====================================================
+"""
+
+from data.market_data import MarketDataEngine
+
+from engine import ema
+from engine import macd
+from engine import rsi
+
+from engine.trade_quality import TradeQualityEngine
+
+
+market = MarketDataEngine()
+trade_engine = TradeQualityEngine()
+
+
+def analyze_stock(ticker):
+
+    ticker = ticker.strip().upper()
+
+    if not ticker.endswith(".NS"):
+        ticker += ".NS"
+
+    df = market.get_data(ticker)
+
+    if df.empty:
+        raise Exception("No market data found")
+
+    ema_result = ema.calculate(df)
+
+    macd_result = macd.calculate(df)
+
+    rsi_result = rsi.calculate(df)
+
+    trade = trade_engine.evaluate(
+        ema_result,
+        macd_result,
+        rsi_result
+    )
+
+    trade["ticker"] = ticker
+
+    trade["price"] = round(
+        float(df["Close"].iloc[-1]),
+        2
+    )
+
+    trade["last_candle"] = str(df.index[-1])
+
+    return tradeimport streamlit as st
 
 st.set_page_config(
     page_title="Trade Decision Engine",
