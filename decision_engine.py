@@ -169,3 +169,9 @@ def build_evolution(df, trade_engine):
         })
 
     return evolution
+    trade = analyze_stock("SBIN.NS")
+    
+    print("\nEngine Evolution\n")
+    
+    for row in trade["evolution"]:
+        print(row)
