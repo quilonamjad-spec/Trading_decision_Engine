@@ -14,11 +14,44 @@ from engine.trade_quality import TradeQualityEngine
 
 
 # --------------------------------------------------------
-# Initialize Engines (created once)
+# Initialize Engines
 # --------------------------------------------------------
 
 market = MarketDataEngine()
 trade_engine = TradeQualityEngine()
+
+
+# --------------------------------------------------------
+# Build Engine Evolution
+# --------------------------------------------------------
+
+def build_evolution(df):
+
+    evolution = []
+
+    MIN_CANDLES = 30      # Start after indicators stabilize
+    STEP = 3              # Every 3 candles (15 min)
+
+    for i in range(MIN_CANDLES, len(df) + 1, STEP):
+
+        partial_df = df.iloc[:i]
+
+        ema_result = ema.calculate(partial_df)
+        macd_result = macd.calculate(partial_df)
+        rsi_result = rsi.calculate(partial_df)
+
+        trade = trade_engine.evaluate(
+            ema_result,
+            macd_result,
+            rsi_result
+        )
+
+        evolution.append({
+            "time": partial_df.index[-1].strftime("%H:%M"),
+            "health": trade["score"]
+        })
+
+    return evolution
 
 
 # --------------------------------------------------------
@@ -49,9 +82,7 @@ def analyze_stock(ticker: str, mode: str = "Intraday"):
     # ------------------------------------
 
     ema_result = ema.calculate(df)
-
     macd_result = macd.calculate(df)
-
     rsi_result = rsi.calculate(df)
 
     # ------------------------------------
@@ -77,8 +108,13 @@ def analyze_stock(ticker: str, mode: str = "Intraday"):
     )
 
     trade["last_candle"] = str(df.index[-1])
-
     trade["candles"] = len(df)
+
+    # ------------------------------------
+    # Engine Evolution
+    # ------------------------------------
+
+    trade["evolution"] = build_evolution(df)
 
     return trade
 
@@ -88,14 +124,6 @@ def analyze_stock(ticker: str, mode: str = "Intraday"):
 # --------------------------------------------------------
 
 def analyze_multiple(stocks):
-
-    """
-    stocks =
-    [
-        {"ticker":"SBIN","mode":"Intraday"},
-        {"ticker":"BEL","mode":"Swing"}
-    ]
-    """
 
     results = []
 
@@ -124,54 +152,4 @@ def analyze_multiple(stocks):
                 "error": str(e)
             })
 
-    evolution = build_evolution(df, trade_engine)
-
-    return {
-        "decision": result,
-        "evolution": evolution
-    }
-#-------
-from datetime import datetime
-
-
-def build_evolution(df, trade_engine):
-    """
-    Build Trade Health evolution throughout the day.
-
-    Evaluates the engine every 3 candles (15 minutes on a 5-minute chart)
-    and records only Trade Health for now.
-    """
-
-    evolution = []
-
-    MIN_CANDLES = 30      # Wait until indicators are stable
-    STEP = 3              # Every 15 minutes
-
-    for i in range(MIN_CANDLES, len(df) + 1, STEP):
-
-        partial_df = df.iloc[:i]
-
-        # Existing indicator calculations
-        ema_result = trade_engine.ema.calculate(partial_df)
-        macd_result = trade_engine.macd.calculate(partial_df)
-        rsi_result = trade_engine.rsi.calculate(partial_df)
-
-        # Existing trade quality calculation
-        result = trade_engine.evaluate(
-            ema_result,
-            macd_result,
-            rsi_result
-        )
-
-        evolution.append({
-            "time": partial_df.index[-1].strftime("%H:%M"),
-            "health": result["trade_health"]
-        })
-
-    return evolution
-    trade = analyze_stock("SBIN.NS")
-    
-    print("\nEngine Evolution\n")
-    
-    for row in trade["evolution"]:
-        print(row)
+    return results
