@@ -27,7 +27,15 @@ trade_engine = TradeQualityEngine()
 
 def build_evolution(df):
 
+    # Keep only today's candles
+    df = df.sort_index()
+
+    latest_date = df.index[-1].date()
+
+    df = df[df.index.date == latest_date]
+
     evolution = []
+
 
     MIN_CANDLES = 30      # Start after indicators stabilize
     STEP = 3              # Every 3 candles (15 min)
