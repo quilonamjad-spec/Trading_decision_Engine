@@ -216,8 +216,8 @@ if len(st.session_state.results):
             #st.write("### Last Candle")
             #st.caption(trade["last_candle"])
 
-            #import pandas as pd
-            #import altair as alt
+            import pandas as pd
+            import altair as alt
 
             st.write("### 📈 Engine Evolution")
 
