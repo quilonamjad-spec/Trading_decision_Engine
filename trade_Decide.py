@@ -15,6 +15,21 @@ if "stocks" not in st.session_state:
         {"ticker": "", "mode": "Intraday"}
     ]
 
+#----
+def analyze_stock(ticker):
+
+    df = market.get_data(ticker)
+
+    ema_result = ema.calculate(df)
+    macd_result = macd.calculate(df)
+    rsi_result = rsi.calculate(df)
+
+    return trade_engine.evaluate(
+        ema_result,
+        macd_result,
+        rsi_result
+    )
+
 
 # --------------------------------------------------
 # ADD STOCK
@@ -124,6 +139,26 @@ if st.button(
     use_container_width=True
 ):
 
-    st.success("Analysis will start here.")
+    results = []
+
+for stock in st.session_state.stocks:
+
+    ticker = stock["ticker"].strip()
+
+    if ticker == "":
+        continue
+
+    try:
+
+        result = analyze_stock(ticker)
+
+        results.append({
+            "ticker": ticker,
+            "result": result
+        })
+
+    except Exception as e:
+
+        st.error(f"{ticker} : {e}")
 
     st.write(st.session_state.stocks)
