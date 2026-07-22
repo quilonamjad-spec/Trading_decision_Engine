@@ -215,6 +215,13 @@ if len(st.session_state.results):
             st.write("### Last Candle")
             st.caption(trade["last_candle"])
 
+            st.write("### Engine Evolution")
+
+            for point in trade["evolution"]:
+                st.write(
+                    point["time"],
+                    point["health"]
+                )
             st.button(
                 "📊 View Details",
                 key=f"details_{trade['ticker']}"
