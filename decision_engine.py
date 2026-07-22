@@ -37,7 +37,7 @@ def build_evolution(df):
     evolution = []
 
 
-    MIN_CANDLES = 30      # Start after indicators stabilize
+    MIN_CANDLES = 10      # Start after indicators stabilize
     STEP = 3              # Every 3 candles (15 min)
 
     for i in range(MIN_CANDLES, len(df) + 1, STEP):
