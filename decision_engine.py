@@ -1,3 +1,10 @@
+"""
+===========================================================
+Trade Decision Engine
+Core Analysis Engine
+===========================================================
+"""
+
 from data.market_data import MarketDataEngine
 
 from engine import ema
@@ -6,85 +13,115 @@ from engine import rsi
 from engine.trade_quality import TradeQualityEngine
 
 
-# ---------------------------------
-# INITIALIZE
-# ---------------------------------
+# --------------------------------------------------------
+# Initialize Engines (created once)
+# --------------------------------------------------------
 
 market = MarketDataEngine()
 trade_engine = TradeQualityEngine()
 
 
-# ---------------------------------
-# STOCK
-# ---------------------------------
+# --------------------------------------------------------
+# Analyze One Stock
+# --------------------------------------------------------
 
-ticker = "SBIN.NS"
+def analyze_stock(ticker: str, mode: str = "Intraday"):
+
+    ticker = ticker.strip().upper()
+
+    if ticker == "":
+        raise ValueError("Ticker cannot be empty")
+
+    if not ticker.endswith(".NS"):
+        ticker += ".NS"
+
+    # ------------------------------------
+    # Download Market Data
+    # ------------------------------------
+
+    df = market.get_data(ticker)
+
+    if df is None or df.empty:
+        raise Exception(f"No market data found for {ticker}")
+
+    # ------------------------------------
+    # Run Indicators
+    # ------------------------------------
+
+    ema_result = ema.calculate(df)
+
+    macd_result = macd.calculate(df)
+
+    rsi_result = rsi.calculate(df)
+
+    # ------------------------------------
+    # Trade Quality
+    # ------------------------------------
+
+    trade = trade_engine.evaluate(
+        ema_result,
+        macd_result,
+        rsi_result
+    )
+
+    # ------------------------------------
+    # Additional Information
+    # ------------------------------------
+
+    trade["ticker"] = ticker
+    trade["mode"] = mode
+
+    trade["price"] = round(
+        float(df["Close"].iloc[-1]),
+        2
+    )
+
+    trade["last_candle"] = str(df.index[-1])
+
+    trade["candles"] = len(df)
+
+    return trade
 
 
-# ---------------------------------
-# DOWNLOAD DATA
-# ---------------------------------
+# --------------------------------------------------------
+# Analyze Multiple Stocks
+# --------------------------------------------------------
 
-print("\nDownloading Market Data...\n")
+def analyze_multiple(stocks):
 
-df = market.get_data(ticker)
+    """
+    stocks =
+    [
+        {"ticker":"SBIN","mode":"Intraday"},
+        {"ticker":"BEL","mode":"Swing"}
+    ]
+    """
 
-print(f"Candles Downloaded : {len(df)}")
+    results = []
 
+    for stock in stocks:
 
-# ---------------------------------
-# RUN INDICATORS
-# ---------------------------------
+        ticker = stock.get("ticker", "").strip()
 
-ema_result = ema.calculate(df)
+        if ticker == "":
+            continue
 
-macd_result = macd.calculate(df)
+        mode = stock.get("mode", "Intraday")
 
-rsi_result = rsi.calculate(df)
+        try:
 
+            results.append(
+                analyze_stock(
+                    ticker=ticker,
+                    mode=mode
+                )
+            )
 
-# ---------------------------------
-# TRADE QUALITY
-# ---------------------------------
+        except Exception as e:
 
-trade = trade_engine.evaluate(
-    ema_result,
-    macd_result,
-    rsi_result
-)
+            results.append({
+                "ticker": ticker,
+                "error": str(e)
+            })
 
-
-# ---------------------------------
-# DISPLAY
-# ---------------------------------
-
-print("\n==============================")
-print("TRADE DECISION ENGINE")
-print("==============================\n")
-
-print("Ticker :", ticker)
-
-print("\nTrade Health :", trade["score"], "/100")
-print("Status       :", trade["status"])
-print("Grade        :", trade["grade"])
-print("Stars        :", trade["stars"])
-
-print("\nDirection    :", trade["direction"])
-print("Confidence   :", trade["confidence"])
-
-print("\nConsensus")
-
-print(trade["consensus"])
-
-print("\nBreakdown")
-
-print(trade["breakdown"])
-
-print("\nEvidence")
-
-for item in trade["evidence"]:
-    print("-", item)
-
-print("\nGatekeeper")
-
-print(trade["gatekeeper"])
+    return results
