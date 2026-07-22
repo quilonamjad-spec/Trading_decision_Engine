@@ -124,4 +124,48 @@ def analyze_multiple(stocks):
                 "error": str(e)
             })
 
-    return results
+    evolution = build_evolution(df, trade_engine)
+
+    return {
+        "decision": result,
+        "evolution": evolution
+    }
+#-------
+from datetime import datetime
+
+
+def build_evolution(df, trade_engine):
+    """
+    Build Trade Health evolution throughout the day.
+
+    Evaluates the engine every 3 candles (15 minutes on a 5-minute chart)
+    and records only Trade Health for now.
+    """
+
+    evolution = []
+
+    MIN_CANDLES = 30      # Wait until indicators are stable
+    STEP = 3              # Every 15 minutes
+
+    for i in range(MIN_CANDLES, len(df) + 1, STEP):
+
+        partial_df = df.iloc[:i]
+
+        # Existing indicator calculations
+        ema_result = trade_engine.ema.calculate(partial_df)
+        macd_result = trade_engine.macd.calculate(partial_df)
+        rsi_result = trade_engine.rsi.calculate(partial_df)
+
+        # Existing trade quality calculation
+        result = trade_engine.evaluate(
+            ema_result,
+            macd_result,
+            rsi_result
+        )
+
+        evolution.append({
+            "time": partial_df.index[-1].strftime("%H:%M"),
+            "health": result["trade_health"]
+        })
+
+    return evolution
