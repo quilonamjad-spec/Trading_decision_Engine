@@ -196,10 +196,10 @@ if len(st.session_state.results):
 
             SmartStockCard.render(trade)
 
-            st.metric(
-                "Trade Health",
-                f'{trade["score"]}/100'
-            )
+           # st.metric(
+               # "Trade Health",
+           #     f'{trade["score"]}/100'
+            #)
 
             #st.write("### Status")
             #st.success(trade["status"])
