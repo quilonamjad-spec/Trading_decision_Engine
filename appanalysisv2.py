@@ -216,25 +216,25 @@ if len(st.session_state.results):
             #st.write("### Last Candle")
             #st.caption(trade["last_candle"])
 
-            import pandas as pd
-            import altair as alt
+            #import pandas as pd
+            #import altair as alt
 
-            st.write("### 📈 Engine Evolution")
+            #st.write("### 📈 Engine Evolution")
 
-            df = pd.DataFrame(trade["evolution"])
+           # df = pd.DataFrame(trade["evolution"])
 
-            chart = (
-                alt.Chart(df)
-                .mark_line(point=True)
-                .encode(
-                    x=alt.X("time:N", title="Time"),
-                    y=alt.Y("health:Q", scale=alt.Scale(domain=[0, 100]), title="Trade Health")
-                )
-                .properties(height=220)
-            )
+            #chart = (
+            #    alt.Chart(df)
+            #    .mark_line(point=True)
+              #  .encode(
+           #         x=alt.X("time:N", title="Time"),
+            #        y=alt.Y("health:Q", scale=alt.Scale(domain=[0, 100]), title="Trade Health")
+            #    )
+           #     .properties(height=220)
+           # )
 
-            st.altair_chart(chart, use_container_width=True)
-            st.button(
-                "📊 View Details",
-                key=f"details_{trade['ticker']}"
-            )
+           # st.altair_chart(chart, use_container_width=True)
+          #  st.button(
+           #     "📊 View Details",
+          #      key=f"details_{trade['ticker']}"
+            #)
