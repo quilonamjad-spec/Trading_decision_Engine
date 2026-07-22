@@ -201,23 +201,23 @@ if len(st.session_state.results):
                 f'{trade["score"]}/100'
             )
 
-            st.write("### Status")
-            st.success(trade["status"])
+            #st.write("### Status")
+            #st.success(trade["status"])
 
-            st.write("### Direction")
-            st.info(trade["direction"])
+           # st.write("### Direction")
+            #st.info(trade["direction"])
 
-            st.write("### Confidence")
-            st.write(trade["confidence"])
+            #st.write("### Confidence")
+            #st.write(trade["confidence"])
 
-            st.write("### Current Price")
-            st.write(f"₹ {trade['price']}")
+            #st.write("### Current Price")
+            #st.write(f"₹ {trade['price']}")
 
-            st.write("### Last Candle")
-            st.caption(trade["last_candle"])
+            #st.write("### Last Candle")
+            #st.caption(trade["last_candle"])
 
-            import pandas as pd
-            import altair as alt
+            #import pandas as pd
+            #import altair as alt
 
             st.write("### 📈 Engine Evolution")
 
